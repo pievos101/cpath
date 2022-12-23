@@ -23,7 +23,7 @@ source("~/CFgraph-Project/CFpath.r")
 source("~/CFgraph-Project/sim.r")
 
 
-n.sim=50
+n.sim=5
 COR_cpath    = rep(NaN, n.sim)
 COR_shap     = rep(NaN, n.sim)
 COR_between  = rep(NaN, n.sim)
@@ -89,7 +89,7 @@ for (xx in 1:n.iter){
         PATHS_l[[yy]][xx,k+2] = sum(res$label_switch_all)    
     }else{
         PATHS_l[[yy]][xx,k+1] = FALSE
-        PATHS_l[[yy]][xx,k+2] = 0
+        PATHS_l[[yy]][xx,k+2] = sum(res$label_switch_all)
     }    
   } 
 }
@@ -117,9 +117,9 @@ for(aa in 1:length(target)){
         if(is.na(PATHS_l[[aa]][xx,2])){ # path of length 1 
 
             if(PATHS_l[[aa]][xx,k+1]==1){
-                #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + 1
+                EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + 1
                 #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + PATHS_l[[aa]][xx,k+2]
-                EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
+                #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
                 
             }
 
@@ -138,9 +138,9 @@ for(aa in 1:length(target)){
         }
 
         if(PATHS_l[[aa]][xx,k+1]==1){
-            #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + 1
+            EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + 1
             #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy+1]] = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy+1]] + PATHS_l[[aa]][xx,k+2]
-            EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]   = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
+            #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]   = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
         }
         
         #if(PATHS_l[[aa]][xx,k+1]==0){
