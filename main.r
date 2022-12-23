@@ -19,11 +19,11 @@ library(lime)
 #data = Glass[1:146,1:9]
 #target = Glass[1:146,10]
 
-source("~/CFgraph-Project/CFpath.r")
-source("~/CFgraph-Project/sim.r")
+source("~/GitHub/c-path/CFpath.r")
+source("~/GitHub/c-path/sim.r")
 
 
-n.sim=5
+n.sim=50
 COR_cpath    = rep(NaN, n.sim)
 COR_shap     = rep(NaN, n.sim)
 COR_between  = rep(NaN, n.sim)
@@ -34,7 +34,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim3()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -117,9 +117,9 @@ for(aa in 1:length(target)){
         if(is.na(PATHS_l[[aa]][xx,2])){ # path of length 1 
 
             if(PATHS_l[[aa]][xx,k+1]==1){
-                EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + 1
+                #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + 1
                 #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + PATHS_l[[aa]][xx,k+2]
-                #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
+                EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
                 
             }
 
@@ -138,9 +138,9 @@ for(aa in 1:length(target)){
         }
 
         if(PATHS_l[[aa]][xx,k+1]==1){
-            EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + 1
+            #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]  = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + 1
             #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy+1]] = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,yy+1]] + PATHS_l[[aa]][xx,k+2]
-            #EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]   = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
+            EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]]   = EDGES_l[[aa]][PATHS_l[[aa]][xx,yy],PATHS_l[[aa]][xx,zz]] + sum(is.na(PATHS_l[[aa]][xx,])) # penalty on path length
         }
         
         #if(PATHS_l[[aa]][xx,k+1]==0){
