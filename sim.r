@@ -92,12 +92,12 @@ return(list(data=data, target=target))
 
 }
 
-#[conditional dependent] - 
+#[conditional dependent] - CPATH wins
 sim5 <- function(){
 
 data = matrix(rnorm(300, 0, 2), 100, 3)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
-target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
+target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
 for(xx in 1:dim(data)[1]){
 
@@ -106,6 +106,10 @@ for(xx in 1:dim(data)[1]){
         if(data[xx,2]<0){
 
             target[xx] = 1
+
+        }else{
+
+            target[xx] = 0
 
         }
     }
