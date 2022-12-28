@@ -213,8 +213,8 @@ print("Negative Examples")
 print(IMP_neg)
 
 ## PLOT 
-library(ggplot2)
-library(reshape)
+#library(ggplot2)
+#library(reshape)
 
 #df = cbind(IMP_neg, IMP_pos)
 #colnames(df) = c("neg", "pos")

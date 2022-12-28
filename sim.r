@@ -1,15 +1,16 @@
 # sim 
 
+# [conditional dependent] - cPATH wins
 sim <- function(){
 
 data = matrix(rnorm(300, 0, 2), 100, 3)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
-target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
+target = sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
 
 for(xx in 1:dim(data)[1]){
 
-    if(data[xx,1]>2){
+    if(data[xx,1]>0){
 
         if(data[xx,2]>0){
             target[xx] = 1
@@ -17,8 +18,8 @@ for(xx in 1:dim(data)[1]){
 
     }else{
 
-        if(data[xx,2]>2){
-            target[xx] = 1
+        if(data[xx,2]>0){
+            target[xx] = 0
         }
     }
 }   
@@ -47,6 +48,7 @@ return(list(data=data, target=target))
 
 }
 
+# [correllated] - SHAP wins
 sim3 <- function(){
 
 data = matrix(rnorm(300, 0, 2), 100, 3)
@@ -66,6 +68,7 @@ return(list(data=data, target=target))
 
 }
 
+# [Features are independent] - LIME wins - cpath looses
 sim4 <- function(){
 
 data = matrix(rnorm(300, 0, 2), 100, 3)
@@ -89,6 +92,7 @@ return(list(data=data, target=target))
 
 }
 
+#[conditional dependent] - 
 sim5 <- function(){
 
 data = matrix(rnorm(300, 0, 2), 100, 3)
