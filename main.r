@@ -28,13 +28,14 @@ COR_cpath    = rep(NaN, n.sim)
 COR_shap     = rep(NaN, n.sim)
 COR_between  = rep(NaN, n.sim)
 COR_lime     = rep(NaN, n.sim)
+COR_cpi      = rep(NaN, n.sim)
 
 # SIM
 for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim5()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -94,13 +95,14 @@ for (xx in 1:n.iter){
   } 
 }
 
+# INIT #############
 EDGES   = matrix(0, dim(data)[2], dim(data)[2])
 EDGES_l = vector("list", length(target))
 
 for(xx in 1:length(target)){
     EDGES_l[[xx]] = EDGES
 }
-
+####################
 
 for(aa in 1:length(target)){
  
@@ -187,7 +189,7 @@ print(EDGES_neg)
 
 #All
 IMP_all <- rep(NaN, dim(data)[2])
-w = diag(EDGES_all)/sum(diag(EDGES_all))
+#w = diag(EDGES_all)/sum(diag(EDGES_all))
 for (xx in 1:length(IMP_all)){
     IMP_all[xx] = sum(EDGES_all[,xx])/sum(EDGES_all[xx,-xx])
     #IMP_all[xx] = w[xx]*sum(EDGES_all[,xx])/sum(EDGES_all[xx,-xx])
@@ -251,13 +253,31 @@ rm(.Random.seed, envir=globalenv())
 
 #plot(explanation, plot_phi0 = FALSE, index_x_test = c(1, 6))
 
-# LIME
+# LIME (n_labels??)
 explainer <- lime(as.data.frame(data), model, bin_continuous = TRUE, quantile_bins = FALSE)
-explanation <- lime::explain(data, explainer, n_labels = 1, n_features = dim(data)[2])
+explanation <- lime::explain(data, explainer, n_labels = 2, n_features = dim(data)[2])
 feat_weights = explanation$feature_weight
 feat_weights = matrix(abs(feat_weights), dim(data)[1], dim(data)[2], byrow=TRUE)
 feat_imp = apply(feat_weights,2, sum)
 IMP_lime = feat_imp
+
+# CPI #############################
+#library(cpi)
+#library(mlr3)
+#library(mlr3learners)
+
+#data2 = cbind(data, target)
+#data2$target <- as.factor(data2$target)
+#IN = as_task_classif(target~., data=data2)
+# model needs to be trained again
+#ccc = cpi(task = IN, 
+#    learner = lrn("classif.ranger", predict_type = "prob"),
+#    resampling = "none", #rsmp("cv", folds = 5), 
+#    test_data = data2,
+#    measure = "classif.logloss", test = "t")
+
+#IMP_cpi = ccc$CPI
+####################################
 
 # GINI importance
 vimp = model$variable.importance
@@ -273,23 +293,30 @@ print("GINI importance")
 print(vimp[ids])
 
 print("Correlation SHAP")
-cor_shap = cor(vimp[ids], IMP_shap[ids], method="kendall")
+cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
 print(cor_shap)
 print("Correlation LIME")
-cor_lime = cor(vimp[ids], IMP_lime[ids], method="kendall")
+cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
 print(cor_lime)
+#print("Correlation CPI")
+#cor_cpi = cor(vimp[ids], IMP_cpi[ids], method="kendall")
+#print(cor_cpi)
 print("Correlation cpath")
-cor_cpath = cor(vimp[ids], IMP_all[ids], method="kendall")
+####
+#IMP_all   = diag(EDGES_all) # when there are no dependencies
+####
+cor_cpath = cor(vimp[ids], IMP_all[ids], method="spearman")
 print(cor_cpath)
 
 
 COR_cpath[ii] = cor_cpath
 COR_shap[ii] = cor_shap
-#COR_between[ii] = cor(IMP_shap[ids], IMP_all[ids], method="spearman")
 COR_lime[ii] = cor_lime
+#COR_cpi[ii]  = cor_cpi
 
-RES = cbind(COR_cpath, COR_shap, COR_lime)
-colnames(RES) = c("CPATH", "SHAP","LIME")
+
+RES = cbind(COR_cpath, COR_shap, COR_lime, COR_cpi)
+colnames(RES) = c("CPATH", "SHAP","LIME", "CPI")
 print(RES)
 
 } # End of simulation

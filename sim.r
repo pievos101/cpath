@@ -3,7 +3,7 @@
 # [conditional dependent] - cPATH wins
 sim <- function(){
 
-data = matrix(rnorm(300, 0, 2), 100, 3)
+data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
@@ -31,7 +31,7 @@ return(list(data=data, target=target))
 # not that informative
 sim2 <- function(){
 
-data = matrix(rnorm(300, 0, 2), 100, 3)
+data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
@@ -51,7 +51,7 @@ return(list(data=data, target=target))
 # [correllated] - SHAP wins
 sim3 <- function(){
 
-data = matrix(rnorm(300, 0, 2), 100, 3)
+data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
@@ -71,7 +71,7 @@ return(list(data=data, target=target))
 # [Features are independent] - LIME wins - cpath looses
 sim4 <- function(){
 
-data = matrix(rnorm(300, 0, 2), 100, 3)
+data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
@@ -95,7 +95,7 @@ return(list(data=data, target=target))
 #[conditional dependent] - CPATH wins
 sim5 <- function(){
 
-data = matrix(rnorm(300, 0, 2), 100, 3)
+data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
@@ -113,6 +113,31 @@ for(xx in 1:dim(data)[1]){
 
         }
     }
+    
+}   
+
+return(list(data=data, target=target))
+
+}
+
+# [conditional dependent] - LIME wins
+sim6 <- function(){
+
+data = matrix(rnorm(400, 0, 2), 100, 4)
+colnames(data) <- paste("V", 1:dim(data)[2], sep="")
+target = sample(c(0,1),dim(data)[1], replace=TRUE)
+#data[,3] <- 1
+
+for(xx in 1:dim(data)[1]){
+
+
+        if(data[xx,1]>0){
+            target[xx] = 1
+        }
+
+        if(data[xx,2]>0){
+            target[xx] = 0
+        }
     
 }   
 
