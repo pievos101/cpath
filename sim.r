@@ -6,7 +6,6 @@ sim <- function(){
 data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
-#data[,3] <- 0
 
 for(xx in 1:dim(data)[1]){
 

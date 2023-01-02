@@ -35,7 +35,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim5()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -68,7 +68,7 @@ while(TRUE){
 
 
 n.iter= 1000 
-k = 3 # length of path
+k = 4 # length of path
 
 # calculate CF paths for each sample
 PATHS   = matrix(NaN, n.iter, k+2)
