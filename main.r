@@ -214,25 +214,6 @@ for (xx in 1:length(IMP_neg)){
 print("Negative Examples")
 print(IMP_neg)
 
-## PLOT 
-#library(ggplot2)
-#library(reshape)
-
-#df = cbind(IMP_neg, IMP_pos)
-#colnames(df) = c("neg", "pos")
-#df_melt = melt(df)
-#colnames(df_melt) = c("var", "type","value")
-#df_melt$var <- factor(df_melt$var, levels=length(IMP_all):1)
-
-#p1 <- ggplot(df_melt, aes(x=var, y=value, fill=type)) + 
-#    coord_flip() + 
-#    facet_wrap(~ type, scales = "free_x") + 
-#    #geom_col() + 
-#    geom_bar(stat = "identity", position = "identity", width = 0.525) +
-#   # scale_y_continuous(expand = c(0, 0)) +
-#    theme(legend.position="top", axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 0.5, size = 10))
-#
-#print(p1)
 
 ## SHAP
 library(shapr)
@@ -303,7 +284,8 @@ print(cor_lime)
 #print(cor_cpi)
 print("Correlation cpath")
 ####
-#IMP_all   = diag(EDGES_all) # when there are no dependencies
+IMP_all   = diag(EDGES_all) #
+#IMP_all = colSums(EDGES_all)
 ####
 cor_cpath = cor(vimp[ids], IMP_all[ids], method="spearman")
 print(cor_cpath)
