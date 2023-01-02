@@ -23,7 +23,7 @@ source("~/GitHub/c-path/CFpath.r")
 source("~/GitHub/c-path/sim.r")
 
 
-n.sim=10
+n.sim=50
 COR_cpath    = rep(NaN, n.sim)
 COR_shap     = rep(NaN, n.sim)
 COR_between  = rep(NaN, n.sim)
@@ -114,7 +114,8 @@ for(aa in 1:length(target)){
 
      if(check==FALSE){break}# path of length 1 or end of path !!!        
 
-     for(zz in (yy+1):k){
+     #for(zz in (yy+1):k){
+        zz = yy + 1
 
         if(is.na(PATHS_l[[aa]][xx,2])){ # path of length 1 
 
@@ -150,7 +151,7 @@ for(aa in 1:length(target)){
         #}
 
      }
-    } 
+    #} 
   }
 }
 
@@ -189,10 +190,8 @@ print(EDGES_neg)
 
 #All
 IMP_all <- rep(NaN, dim(data)[2])
-#w = diag(EDGES_all)/sum(diag(EDGES_all))
 for (xx in 1:length(IMP_all)){
-    IMP_all[xx] = (sum(EDGES_all[-xx,xx])-sum(EDGES_all[xx,-xx]))/(sum(EDGES_all[-xx,xx])+sum(EDGES_all[xx,-xx]))
-    #IMP_all[xx] = w[xx]*sum(EDGES_all[,xx])/sum(EDGES_all[xx,-xx])
+    IMP_all[xx] = sum(EDGES_all[,xx])/sum(EDGES_all[,-xx])
 }
 
 print("Positive & Negative Examples")
@@ -201,7 +200,7 @@ print(IMP_all)
 #Pos
 IMP_pos <- rep(NaN, dim(data)[2])
 for (xx in 1:length(IMP_pos)){
-    IMP_pos[xx] = (sum(EDGES_pos[-xx,xx])-sum(EDGES_pos[xx,-xx]))/(sum(EDGES_pos[-xx,xx])+sum(EDGES_pos[xx,-xx]))
+    IMP_pos[xx] = sum(EDGES_pos[,xx])/sum(EDGES_pos[,-xx])
 }
 print("Positive Examples")
 print(IMP_pos)
@@ -209,7 +208,7 @@ print(IMP_pos)
 #Neg
 IMP_neg <- rep(NaN, dim(data)[2])
 for (xx in 1:length(IMP_neg)){
-    IMP_neg[xx] = (sum(EDGES_neg[-xx,xx])-sum(EDGES_neg[xx,-xx]))/(sum(EDGES_neg[-xx,xx])+sum(EDGES_neg[xx,-xx]))
+    IMP_neg[xx] = sum(EDGES_neg[,xx])/sum(EDGES_neg[,-xx])
 }
 print("Negative Examples")
 print(IMP_neg)
@@ -284,8 +283,8 @@ print(cor_lime)
 #print(cor_cpi)
 print("Correlation cpath")
 ####
-IMP_all   = diag(EDGES_all)/sum(diag(EDGES_all))#
-#IMP_all  = colSums(EDGES_all)
+#IMP_all   = diag(EDGES_all)/sum(diag(EDGES_all))#
+#IMP_all   = colSums(EDGES_all)
 ####
 cor_cpath = cor(vimp[ids], IMP_all[ids], method="spearman")
 print(cor_cpath)
