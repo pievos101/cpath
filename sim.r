@@ -53,7 +53,8 @@ sim3 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
-target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
+#target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
+target = sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
 
 for(xx in 1:dim(data)[1]){
@@ -120,7 +121,7 @@ return(list(data=data, target=target))
 
 }
 
-# [conditional dependent] - LIME wins
+# [conditional independent] - LIME wins
 sim6 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
