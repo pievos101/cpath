@@ -35,7 +35,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim()
+res  = sim5()
 data = res$data
 target = res$target
 
@@ -45,7 +45,7 @@ while(TRUE){
                 num.trees=100, 
                 classification=TRUE, 
                 probability=TRUE, 
-                #mtry=3, 
+                #mtry=4, 
                 #replace=TRUE,#), 
                 importance='impurity')
     pred = predict(model, data)$predictions
