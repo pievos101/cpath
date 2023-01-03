@@ -119,28 +119,3 @@ for(xx in 1:dim(data)[1]){
 return(list(data=data, target=target))
 
 }
-
-# [conditional independent] - LIME wins
-sim6 <- function(){
-
-data = matrix(rnorm(400, 0, 2), 100, 4)
-colnames(data) <- paste("V", 1:dim(data)[2], sep="")
-target = sample(c(0,1),dim(data)[1], replace=TRUE)
-#data[,3] <- 1
-
-for(xx in 1:dim(data)[1]){
-
-
-        if(data[xx,1]>0){
-            target[xx] = 1
-        }
-
-        if(data[xx,2]>0){
-            target[xx] = 0
-        }
-    
-}   
-
-return(list(data=data, target=target))
-
-}

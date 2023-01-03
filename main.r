@@ -23,7 +23,7 @@ source("~/GitHub/c-path/CFpath.r")
 source("~/GitHub/c-path/sim.r")
 
 
-n.sim=50
+n.sim=100
 COR_cpath    = rep(NaN, n.sim)
 COR_shap     = rep(NaN, n.sim)
 COR_between  = rep(NaN, n.sim)
@@ -35,7 +35,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim5()
+res  = sim4()
 data = res$data
 target = res$target
 
