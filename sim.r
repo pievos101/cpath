@@ -62,7 +62,8 @@ target = sample(c(0,1),dim(data)[1], replace=TRUE)
 #data[,3] <- 0
 
 count = 1 
-a = 0 
+a     = 0
+
 for(xx in 1:dim(data)[1]){
 
     if((data[xx,1]>=a) & (data[xx,2]>=a)){
@@ -71,12 +72,13 @@ for(xx in 1:dim(data)[1]){
             count = count + 1 
     }
 
-    if((data[xx,1]<a) & (data[xx,2]<a)){
+    #if((data[xx,1]<a) & (data[xx,2]<a)){
 
-            target[xx] = 0
-            count = count + 1 
-    }   
+    #        target[xx] = 0
+    #        count = count + 1 
+    #}   
 }
+
 return(list(data=data, target=target, noise=1-(count/length(target))))
 
 }
@@ -139,5 +141,37 @@ for(xx in 1:dim(data)[1]){
 }   
 
 return(list(data=data, target=target))
+
+}
+
+# [conditional dependent] - cPATH wins
+sim7 <- function(){
+
+data = matrix(rnorm(400, 0, 2), 100, 4)
+colnames(data) <- paste("V", 1:dim(data)[2], sep="")
+target = sample(c(0,1),dim(data)[1], replace=TRUE)
+
+count = 1 
+a = 0
+b = 0 
+for(xx in 1:dim(data)[1]){
+
+    if(data[xx,1]>=a){
+
+        if(data[xx,2]>=b){
+            target[xx] = 1
+            count = count + 1 
+        }
+
+    }else{
+
+        if(data[xx,3]>=b){
+            target[xx] = 0
+            count = count + 1
+        }
+    }
+}   
+
+return(list(data=data, target=target, noise=1-(count/length(target))))
 
 }
