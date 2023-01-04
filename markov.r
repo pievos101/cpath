@@ -3,7 +3,7 @@ library(markovchain)
 # define the markovchain object
 statesNames <- c("v1", "v2", "v3","v4")
 
-TRAN = EDGES_all
+TRAN = t(EDGES_all)
 colnames(TRAN) = statesNames 
 rownames(TRAN) = statesNames
 TRAN = TRAN/rowSums(TRAN)
