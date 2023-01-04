@@ -35,7 +35,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim7()
+res  = sim3()
 data = res$data
 target = res$target
 
