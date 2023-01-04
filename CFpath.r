@@ -4,6 +4,7 @@ CFpath <- function(model, test_set, k){
 # Get the labels 
 pred   = predict(model, test_set)
 labels = pred$predictions
+#labels = pred
 labels = apply(labels,1,function(x){which.max(x)-1})
 
 test_setX    <- test_set 
@@ -21,6 +22,7 @@ for (xx in 1:k){
     f_perm  = sample(test_set[,f_start[xx]], dim(test_set)[1]) 
     test_setX[,f_start[xx]] = f_perm
     pred = predict(model, test_setX)
+    #labels_perm = pred
     labels_perm  = pred$predictions
     labels_perm  = apply(labels_perm,1,function(x){which.max(x)-1})
 

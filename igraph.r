@@ -1,9 +1,12 @@
 #igraph
+library(igraph)
+library(reshape)
 
 # define the markovchain object
 statesNames <- c("v1", "v2", "v3","v4")
 
 TRAN = EDGES_all
+#diag(TRAN) = 0
 colnames(TRAN) = statesNames 
 rownames(TRAN) = statesNames
 TRAN = TRAN/rowSums(TRAN)
@@ -25,7 +28,7 @@ curve.reciprocal.edges <- function(g, curve=.3){
 }
 
 #plot(g, layout=layout.circle, edge.curved=.2)
-plot(curve.reciprocal.edges(g), layout=layout.circle, 
+plot(curve.reciprocal.edges(g), #layout=layout.circle, 
     vertex.label.cex = 1.5,
     edge.label = WEIGHTS,
     #edge.arrow.size=1,#+WEIGHTS*8,                           # Arrow size, defaults to 1
