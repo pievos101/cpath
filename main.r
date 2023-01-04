@@ -35,7 +35,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim()
+res  = sim3()
 data = res$data
 target = res$target
 
@@ -191,7 +191,7 @@ print(EDGES_neg)
 #All
 IMP_all <- rep(NaN, dim(data)[2])
 for (xx in 1:length(IMP_all)){
-    IMP_all[xx] = sum(EDGES_all[,xx])/sum(EDGES_all[xx,-xx])
+    IMP_all[xx] = sum(EDGES_all[,xx])/sum(EDGES_all[,-xx])
 }
 
 print("Positive & Negative Examples")
@@ -200,7 +200,7 @@ print(IMP_all)
 #Pos
 IMP_pos <- rep(NaN, dim(data)[2])
 for (xx in 1:length(IMP_pos)){
-    IMP_pos[xx] = sum(EDGES_pos[,xx])/sum(EDGES_pos[xx,-xx])
+    IMP_pos[xx] = sum(EDGES_pos[,xx])/sum(EDGES_pos[,-xx])
 }
 print("Positive Examples")
 print(IMP_pos)
@@ -208,7 +208,7 @@ print(IMP_pos)
 #Neg
 IMP_neg <- rep(NaN, dim(data)[2])
 for (xx in 1:length(IMP_neg)){
-    IMP_neg[xx] = sum(EDGES_neg[,xx])/sum(EDGES_neg[xx,-xx])
+    IMP_neg[xx] = sum(EDGES_neg[,xx])/sum(EDGES_neg[,-xx])
 }
 print("Negative Examples")
 print(IMP_neg)

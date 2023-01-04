@@ -18,4 +18,4 @@ geom_violin()+
 theme_bw() +
 ylab("Spearman corellation") +
 xlab("Method")
-
+p1
