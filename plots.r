@@ -25,4 +25,25 @@ xlab("Method")
 p1
 
 
-## BARPLOT
+## LINEPLOT
+gini  = c(0.990, 0.940, 0.875, 0.860, 0.815)
+cpath = c(0.960, 0.910, 0.830, 0.850, 0.715)
+shap  = c(0.855, 0.700, 0.635, 0.640, 0.615)
+lime  = c(0.720, 0.655, 0.595, 0.600, 0.600)
+cpi   = c(1,     0.955, 0.860, 0.505, 0.520)
+signal = rep(c(2/2, 2/4, 2/6, 2/8, 2/10),5)
+
+df = cbind(gini, cpath, shap, lime, cpi)
+df_melt = melt(df)
+df_melt[,1] = signal
+
+colnames(df_melt) = c("signal","method","value")
+df_melt$value  <- as.numeric(df_melt$value)
+df_melt$signal <- as.numeric(df_melt$signal)
+
+p <- ggplot(df_melt, aes(x=signal, y=value, group=method)) +
+  geom_line(aes(color=method))+
+  geom_point(aes(color=method))+
+  scale_x_reverse()+
+  ylab("coverage") 
+p

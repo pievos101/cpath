@@ -36,7 +36,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim4()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -257,7 +257,7 @@ IN = as_task_classif(target~., data=data2)
 #model needs to be trained again
 ccc = cpi(task = IN, 
     learner = lrn("classif.ranger", predict_type = "prob", num.trees = 100),
-    resampling = "none", #rsmp("cv", folds = 5), 
+    resampling = rsmp("cv", folds = 5), 
     test_data = data2,
     measure = "classif.logloss", test = "t")
 

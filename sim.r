@@ -3,7 +3,7 @@
 # [conditional dependent] - cPATH wins
 sim <- function(){
 
-data = matrix(rnorm(1000, 0, 2), 100, 10)
+data = matrix(rnorm(1200, 0, 2), 100, 12)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
