@@ -3,7 +3,7 @@
 # [conditional dependent] - cPATH wins
 sim <- function(){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(1000, 0, 2), 100, 10)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
@@ -55,7 +55,7 @@ return(list(data=data, target=target))
 # [correllated] - 
 sim3 <- function(){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(1000, 0, 2), 100, 10)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 #target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
@@ -86,7 +86,7 @@ return(list(data=data, target=target, noise=1-(count/length(target))))
 # [Features are independent] - LIME wins - cpath looses
 sim4 <- function(){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(1000, 0, 2), 100, 10)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 

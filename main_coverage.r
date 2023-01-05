@@ -24,18 +24,19 @@ source("~/GitHub/c-path/sim.r")
 
 
 n.sim=100
-COR_cpath    = rep(NaN, n.sim)
-COR_shap     = rep(NaN, n.sim)
-COR_between  = rep(NaN, n.sim)
-COR_lime     = rep(NaN, n.sim)
-COR_cpi      = rep(NaN, n.sim)
+COV_cpath    = rep(NaN, n.sim)
+COV_shap     = rep(NaN, n.sim)
+COV_between  = rep(NaN, n.sim)
+COV_lime     = rep(NaN, n.sim)
+COV_cpi      = rep(NaN, n.sim)
+COV_gini     = rep(NaN, n.sim)
 
 # SIM
 for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim3()
+res  = sim4()
 data = res$data
 target = res$target
 
@@ -213,6 +214,11 @@ for (xx in 1:length(IMP_neg)){
 print("Negative Examples")
 print(IMP_neg)
 
+print("")
+print("########################################################")
+print("########################################################")
+print("########################################################")
+print("")
 
 ## SHAP
 library(shapr)
@@ -227,7 +233,6 @@ explanation <- shapr::explain(
 )
 
 IMP_shap = apply(abs(explanation$dt),2,sum)[-1]
-print(IMP_shap)
 
 rm(.Random.seed, envir=globalenv())
 
@@ -242,26 +247,25 @@ feat_imp = apply(feat_weights,2, sum)
 IMP_lime = feat_imp
 
 # CPI #############################
-#library(cpi)
-#library(mlr3)
-#library(mlr3learners)
+library(cpi)
+library(mlr3)
+library(mlr3learners)
 
-#data2 = cbind(data, target)
-#data2$target <- as.factor(data2$target)
-#IN = as_task_classif(target~., data=data2)
-# model needs to be trained again
-#ccc = cpi(task = IN, 
-#    learner = lrn("classif.ranger", predict_type = "prob"),
-#    resampling = "none", #rsmp("cv", folds = 5), 
-#    test_data = data2,
-#    measure = "classif.logloss", test = "t")
+data2 = cbind(data, target)
+data2$target <- as.factor(data2$target)
+IN = as_task_classif(target~., data=data2)
+#model needs to be trained again
+ccc = cpi(task = IN, 
+    learner = lrn("classif.ranger", predict_type = "prob", num.trees = 100),
+    resampling = "none", #rsmp("cv", folds = 5), 
+    test_data = data2,
+    measure = "classif.logloss", test = "t")
 
-#IMP_cpi = ccc$CPI
+IMP_cpi = ccc$CPI
 ####################################
 
 # GINI importance
 vimp = model$variable.importance
-ids = vimp!=0
 
 # Normalize -------------- #
 #IMP_shap = IMP_shap/max(IMP_shap)
@@ -270,34 +274,41 @@ ids = vimp!=0
 # ------------------------ #
 
 print("GINI importance")
-print(vimp[ids])
+print(vimp)
 
-print("Correlation SHAP")
-cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
-print(cor_shap)
-print("Correlation LIME")
-cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
-print(cor_lime)
-#print("Correlation CPI")
-#cor_cpi = cor(vimp[ids], IMP_cpi[ids], method="kendall")
-#print(cor_cpi)
-print("Correlation cpath")
-####
-#IMP_all   = diag(EDGES_all)/sum(diag(EDGES_all))#
-#IMP_all   = colSums(EDGES_all)
-####
-cor_cpath = cor(vimp[ids], IMP_all[ids], method="spearman")
-print(cor_cpath)
+print("LIME importance")
+names(IMP_lime) = colnames(data)
+print(IMP_lime) 
+
+print("SHAPE importance")
+print(IMP_shap)
+
+print("CPATH importance")
+names(IMP_all) = colnames(data)
+print(IMP_all)
+
+print("CPI importance")
+names(IMP_cpi) = colnames(data)
+print(IMP_cpi)
+
+# Coverage
+truth = c("V1","V2")
+gini = sum(is.element(names(sort(vimp, decreasing=TRUE))[1:2], truth))/length(truth)
+cpath = sum(is.element(names(sort(IMP_all, decreasing=TRUE))[1:2], truth))/length(truth)
+shap = sum(is.element(names(sort(IMP_shap, decreasing=TRUE))[1:2], truth))/length(truth)
+lime = sum(is.element(names(sort(IMP_lime, decreasing=TRUE))[1:2], truth))/length(truth)
+cpi = sum(is.element(names(sort(IMP_cpi, decreasing=TRUE))[1:2], truth))/length(truth)
 
 
-COR_cpath[ii] = cor_cpath
-COR_shap[ii] = cor_shap
-COR_lime[ii] = cor_lime
-#COR_cpi[ii]  = cor_cpi
+COV_gini[ii]  = gini  
+COV_cpath[ii] = cpath
+COV_shap[ii]  = shap
+COV_lime[ii]  = lime
+COV_cpi[ii]   = cpi
 
 
-RES = cbind(COR_cpath, COR_shap, COR_lime, COR_cpi)
-colnames(RES) = c("CPATH", "SHAP","LIME", "CPI")
+RES = cbind(COV_gini, COV_cpath, COV_shap, COV_lime, COV_cpi)
+colnames(RES) = c("GINI","CPATH", "SHAP","LIME", "CPI")
 print(RES)
 
 } # End of simulation

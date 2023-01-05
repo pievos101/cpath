@@ -4,6 +4,9 @@
 library(ggplot2)
 library(reshape)
 
+
+## BOXPLOT
+###########################
 RES_melt = melt(RES[,1:3])
 #colnames(RES_melt) = c("Method","value")
 colnames(RES_melt) = c("id", "Method","value")
@@ -20,3 +23,6 @@ theme_bw() +
 ylab("Spearman corellation") +
 xlab("Method")
 p1
+
+
+## BARPLOT
