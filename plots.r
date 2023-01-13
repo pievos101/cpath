@@ -24,8 +24,9 @@ ylab("Spearman corellation") +
 xlab("Method")
 p1
 
-
 ## LINEPLOT
+library(ggplot2)
+library(reshape)
 gini  = c(0.990, 0.940, 0.875, 0.860, 0.815)
 cpath = c(0.960, 0.910, 0.830, 0.850, 0.715)
 shap  = c(0.855, 0.700, 0.635, 0.640, 0.615)
@@ -42,8 +43,9 @@ df_melt$value  <- as.numeric(df_melt$value)
 df_melt$signal <- as.numeric(df_melt$signal)
 
 p <- ggplot(df_melt, aes(x=signal, y=value, group=method)) +
-  geom_line(aes(color=method))+
-  geom_point(aes(color=method))+
+  geom_line(aes(color=method), size=1)+
+  geom_point(aes(color=method), size=2)+
   scale_x_reverse()+
-  ylab("coverage") 
+  ylab("coverage") +
+  xlab("signal to noise ratio")
 p
