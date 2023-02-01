@@ -32,7 +32,7 @@ model = ranger(x=train,y=target_train,
             classification=TRUE, 
             probability=TRUE, 
             importance='impurity')
-pred = predict(model, data)$predictions
+pred = predict(model, test)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
 
 # Get the counterfactual paths
