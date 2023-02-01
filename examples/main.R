@@ -1,13 +1,4 @@
-# c-path
-
-<p align="center">
-<img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
-</p>
-
-
-## Usage
-
-```{r}
+# main 
 library(ranger)
 library(cpath)
 
@@ -35,4 +26,3 @@ T   = cpath::transition(P, data, target, k=4)
 IMP = cpath::importance(T)
 
 print(IMP)
-```
