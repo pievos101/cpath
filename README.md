@@ -19,8 +19,6 @@ model = ranger(x=data,y=target,
             num.trees=100, 
             classification=TRUE, 
             probability=TRUE, 
-            #mtry=4, 
-            #replace=TRUE,#), 
             importance='impurity')
 pred = predict(model, data)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
