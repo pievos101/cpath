@@ -1,5 +1,8 @@
 
-transition <- function(PATHS_l, data, target, k=4){
+transition <- function(PATHS_l, data, target){
+
+# Get the length of path
+k = dim(PATHS_l[[1]])[2]-2
 
 # INIT #############
 EDGES   = matrix(0, dim(data)[2], dim(data)[2])

@@ -39,7 +39,7 @@ pred = apply(pred,1,function(x){which.max(x)-1})
 P   = cpath::cpaths(model, test, target_test, k=4, n.iter= 1000)
 
 # Build transition matrix 
-T   = cpath::transition(P, test, target_test, k=4)
+T   = cpath::transition(P, test, target_test)
 
 # Get global feature importances
 IMP = cpath::importance(T)
