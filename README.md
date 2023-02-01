@@ -1,4 +1,4 @@
-# c-path
+# cpath
 
 <p align="center">
 <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
