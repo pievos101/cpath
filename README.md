@@ -10,11 +10,12 @@
 library(ranger)
 library(cpath)
 
+# Generate simulated data
 res  = sim()
 data = res$data
 target = res$target
 
-# train-test split 
+# Train-test split 
 
 ## 80% of the sample size
 smp_size <- floor(0.80 * nrow(data))
@@ -27,11 +28,14 @@ test  <- data[-train_ind, ]
 target_train = target[train_ind]
 target_test  = target[-train_ind]
 
+# Train a random forest classifier
 model = ranger(x=train,y=target_train, 
             num.trees=100, 
             classification=TRUE, 
             probability=TRUE, 
             importance='impurity')
+
+# Predictions on test data
 pred = predict(model, test)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
 

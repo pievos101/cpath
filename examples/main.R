@@ -19,6 +19,7 @@ test  <- data[-train_ind, ]
 target_train = target[train_ind]
 target_test  = target[-train_ind]
 
+# Train a random forest classifier
 model = ranger(x=train,y=target_train, 
             num.trees=100, 
             classification=TRUE, 
