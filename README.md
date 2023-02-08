@@ -1,5 +1,7 @@
 # cpath
 
+## Explaining black-box models through counterfactual paths and conditional permutations
+
 <p align="center">
 <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
 </p>
