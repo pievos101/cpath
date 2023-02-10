@@ -38,3 +38,17 @@ T   = cpath::transition(P, test, target_test)
 IMP = cpath::importance(T)
 
 print(IMP)
+
+cp_mc <- cpaths_monte_carlo(model, test, k=4)
+print(cp_mc$importance/sum(cp_mc$importance))
+
+cp_q <- cpaths_qlearning(model, test, k=4)
+print(cp_q$importance)
+
+cp_td <- cpaths_tdlearning(model, test, k=4)
+print(cp_td$importance)
+
+print(model$variable.importance/sum(model$variable.importance)) 
+
+
+
