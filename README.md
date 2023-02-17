@@ -13,10 +13,13 @@ The cpath R-package can be installed using devtools.
 ```{r}
 install.packages("devtools")
 library(devtools)
+
 devtools::install_github("pievos101/cpath")
+library(cpath)
 
 # ranger package is required 
 install.packages("ranger")
+library(ranger)
 ```
 
 ## Usage
