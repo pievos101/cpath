@@ -61,6 +61,9 @@ T   = cpath::transition(P, test, target_test)
 
 # Get global feature importances
 IMP = cpath::importance(T)
-
 print(IMP)
+
+# The RL Q-Learning alternative
+cp_q <- cpaths_qlearning(model, test, k=4)
+print(cp_q$importance)
 ```
