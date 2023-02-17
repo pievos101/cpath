@@ -6,6 +6,18 @@
 <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
 </p>
 
+
+## Installation
+The cpath R-package can be installed using devtools.
+
+```{r}
+install.packages("devtools")
+devtools::install_github("pievos101/cpath")
+
+# ranger package is required 
+install.packages("ranger")
+```
+
 ## Usage
 
 ```{r}
