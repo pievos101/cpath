@@ -4,7 +4,7 @@ choose_action_Q <- function(Q_row_state, states, epsilon){
     next_state <- sample(states, 1)
   }
   else {
-    next_state <- which.max(Q_row_state)
+    next_state <- sample(states, 1, prob=Q_row_state) #which.max(Q_row_state)
   }
   next_state
 }
@@ -19,20 +19,21 @@ cpaths_qlearning <- function(model, test_set, k, n_iter=1000,
   states <- 1:p
   labels <- get_predictions(model, test_set)
 
-  Q <- matrix(0, nrow = p, ncol = p)
+  Q <- matrix(0.01, nrow = p, ncol = p)
 
   for (i in 1:n_iter){
     current_state <- sample(states, 1)
     action <- choose_action_Q(Q[current_state,], states, epsilon)
     dataX <- test_set
+  
     for (i in 1:k){
       next_state <- action
       dataX <- permute_column(dataX, test_set, current_state)
       labels_perm <- get_predictions(model, dataX)
       reward <- get_reward(labels_perm, labels)
   
-      next_action <- choose_action_Q(Q[next_state,], states,epsilon)
-      Q[current_state, action] <- Q[current_state, action] +
+      next_action <- choose_action_Q(Q[next_state,], states, epsilon)
+      Q[current_state, action] <- Q[current_state, action] + 
                                   alpha * (reward + gamma * max(Q[next_state,]) - Q[current_state, action])
       
       # if random_stopping == TRUE, end episode with probability of reward value
