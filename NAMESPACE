@@ -3,5 +3,6 @@ export(cpaths)
 export(transition)
 export(importance)
 export(sim)
-
-
+export(cpaths_qlearning) 
+export(cpaths_tdlearning)
+export(cpaths_monte_carlo)
