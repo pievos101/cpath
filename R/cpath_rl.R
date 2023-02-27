@@ -37,7 +37,7 @@ cpath_rl <- function(model, test_set, k, n_iter=1000,
     for (step in 1:k) {
       new_data <- permute_column(current_data, current_state)
       new_predictions <- get_predictions(model, new_data)
-      reward <- get_reward(new_predictions, old_predictions, labels)
+      reward <- get_reward_rl(new_predictions, old_predictions, labels)
       next_state <- choose_state_Q(Q[current_state,], states, epsilon_values[iter])
       Q[current_state, next_state] <- Q[current_state, next_state] + 
         alpha_values[iter] * (reward + gamma * max(Q[next_state,]) - 
