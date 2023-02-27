@@ -1,7 +1,7 @@
 Package: cpath
 Type: Package
 Title: Explaining black-box models through counterfactual paths and conditional permutations
-Version: 1.0
+Version: 1.1
 Date: 2023-01-18
 Author: Bastian Pfeifer
 Maintainer: Bastian Pfeifer <bastianxpfeifer@gmail.com>

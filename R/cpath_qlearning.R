@@ -28,7 +28,7 @@ cpaths_qlearning <- function(model, test_set, k, n_iter=1000,
   
     for (i in 1:k){
       next_state <- action
-      dataX <- permute_column(dataX, test_set, current_state)
+      dataX <- permute_column(dataX, current_state)
       labels_perm <- get_predictions(model, dataX)
       reward <- get_reward(labels_perm, labels)
   

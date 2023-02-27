@@ -11,11 +11,11 @@ cpath <- function(model, test_set, k){
   f_start = sample(1:dim(test_setX)[2], k, replace=TRUE)
   cf_path = f_start # randomly select a feature
       
-  label_switch_all = rep(FALSE, length(target))
+  label_switch_all = rep(FALSE, nrow(test_set))
   
   for (xx in 1:k){
     
-      test_setX <- permute_column(test_setX, test_set, f_start[xx])
+      test_setX <- permute_column(test_setX, f_start[xx])
       labels_perm <- get_predictions(model, test_setX)
       
   

@@ -27,7 +27,7 @@ cpaths_tdlearning <- function(model, test_set, k, n_iter=1000,
     dataX <- test_set
     
     for (i in 1:k){
-      dataX <- permute_column(dataX, test_set, current_state)
+      dataX <- permute_column(dataX, current_state)
       labels_perm <- get_predictions(model, dataX)
       reward <- get_reward(labels_perm, labels)
   
