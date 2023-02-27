@@ -86,4 +86,4 @@ p <- ggplot(df4) +
   geom_col(aes(importance, variable)) +
   facet_grid(~measure, scales = "free_x")
 p
-ggsave("simulations/output/rl_diabetesle.png", p, width=8, height=5)
+ggsave("simulations/output/rl_diabetes.png", p, width=8, height=5)
