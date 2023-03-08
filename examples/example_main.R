@@ -2,7 +2,7 @@
 library(ranger)
 library(cpath)
 
-res  = sim()
+res  = sim5()
 data = res$data
 target = res$target
 
@@ -33,22 +33,19 @@ P   = cpath::cpaths(model, test, target_test, k=4, n.iter= 1000)
 
 # Build transition matrix 
 T   = cpath::transition(P, test, target_test)
+T2  = cpath::transition(P, test, target_test, add1=TRUE)
 
 # Get global feature importances
 IMP = cpath::importance(T)
-
 print(IMP)
 
-cp_mc <- cpaths_monte_carlo(model, test, k=4)
-print(cp_mc$importance/sum(cp_mc$importance))
-
-cp_q <- cpaths_qlearning(model, test, k=4)
-print(cp_q$importance)
-
-cp_td <- cpaths_tdlearning(model, test, k=4)
-print(cp_td$importance)
-
-print(model$variable.importance/sum(model$variable.importance)) 
+IMP_st = cpath::importance(T, agg_type="stationary_distribution")
+print(IMP_st)
 
 
+IMP2 = cpath::importance(T2)
+print(IMP2)
+
+IMP2_st = cpath::importance(T2, agg_type="stationary_distribution")
+print(IMP2_st)
 
