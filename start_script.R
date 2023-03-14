@@ -1,12 +1,12 @@
-# main 
 library(ranger)
 library(cpath)
 
-res  = sim5()
+# Generate simulated data
+res  = sim()
 data = res$data
 target = res$target
 
-# train-test split 
+# Train-test split 
 
 ## 80% of the sample size
 smp_size <- floor(0.80 * nrow(data))
@@ -21,11 +21,13 @@ target_test  = target[-train_ind]
 
 # Train a random forest classifier
 model = ranger(x=train,y=target_train, 
-            num.trees=100, 
-            classification=TRUE, 
-            probability=TRUE, 
-            importance='impurity')
-pred = predict(model, data)$predictions
+               num.trees=100, 
+               classification=TRUE, 
+               probability=TRUE, 
+               importance='impurity')
+
+# Predictions on test data
+pred = predict(model, test)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
 
 # Get the counterfactual paths
@@ -33,19 +35,11 @@ P   = cpath::cpaths(model, test, target_test, k=4, n.iter= 1000)
 
 # Build transition matrix 
 T   = cpath::transition(P, test, target_test)
-T2  = cpath::transition(P, test, target_test, add1=TRUE)
 
 # Get global feature importances
 IMP = cpath::importance(T)
-print(IMP)
+print(IMP/sum(IMP))
 
-IMP_st = cpath::importance(T, agg_type="stationary_distribution")
-print(IMP_st)
-
-
-IMP2 = cpath::importance(T2)
-print(IMP2)
-
-IMP2_st = cpath::importance(T2, agg_type="stationary_distribution")
-print(IMP2_st)
-
+# The RL Q-Learning alternative
+cp_q <- cpaths_qlearning(model, test, k=4)
+print(cp_q$importance)
