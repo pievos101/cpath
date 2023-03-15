@@ -1,14 +1,7 @@
 importance <- function(Tran, agg_type = "matrix"){
 
   if (agg_type == "matrix"){
-    EDGES_all = Tran
-    
-    #Imp
-    IMP_all <- rep(NaN, dim(Tran)[2])
-    for (xx in 1:dim(Tran)[2]){
-        IMP_all[xx] = sum(EDGES_all[,xx])/sum(EDGES_all)
-    }
-    
+    IMP_all = colSums(Tran)/sum(Tran)
     return(IMP_all)
   } else if (agg_type == "stationary_distribution"){
     T_norm <- Tran/rowSums(Tran)

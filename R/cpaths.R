@@ -1,31 +1,23 @@
+cpaths <- function(model, data, k=4, n_paths=1000){
 
-cpaths <- function(model, data, target, k=4, n.iter=1000){
-
-# calculate CF paths for each sample
-PATHS   = matrix(NaN, n.iter, k+2)
-PATHS_l = vector("list", length(target))
-
-for(xx in 1:length(target)){
-    PATHS_l[[xx]] = PATHS
-}
-
-for (xx in 1:n.iter){
-
-    res = cpath(model, data, k=k)
-    ids = which(res$label_switch_all)
+  paths <- matrix(NaN, nrow=n_paths, ncol=k)
+  swapped_fractions <- matrix(NaN, nrow=n_paths, ncol=k)
+  reswapped_fraction <- matrix(NaN, nrow=n_paths, ncol=k)
+  counterfactuality <- rep(FALSE, n_paths)
+  lengths <- rep(NaN, n_paths)
   
-  for(yy in 1:length(target)){  
-    PATHS_l[[yy]][xx,1:length(res$cf_path)] = res$cf_path
-    if(is.element(yy, ids)){
-        PATHS_l[[yy]][xx,k+1] = TRUE
-        PATHS_l[[yy]][xx,k+2] = sum(res$label_switch_all)    
-    }else{
-        PATHS_l[[yy]][xx,k+1] = FALSE
-        PATHS_l[[yy]][xx,k+2] = sum(res$label_switch_all)
-    }    
-  } 
-}
-
-return(PATHS_l)
-
+  for (xx in 1:n_paths){
+    cpath <- cpath(model, data, k=k)
+    paths[xx, ] <- cpath$cf_path[1:k]
+    swapped_fractions[xx, ] <- cpath$swapped_fraction
+    reswapped_fraction[xx, ] <- cpath$reswapped_fraction
+    counterfactuality[xx] <- cpath$counterfactuality
+  }
+  
+  return(list(paths = paths, 
+              swapped_fractions = swapped_fractions,
+              reswapped_fraction = reswapped_fraction,
+              counterfactuality = counterfactuality,
+              p = ncol(data)
+              ))
 }
