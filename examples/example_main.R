@@ -2,7 +2,7 @@
 library(ranger)
 library(cpath)
 
-res  = sim5()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -29,23 +29,19 @@ pred = predict(model, data)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
 
 # Get the counterfactual paths
-P   = cpath::cpaths(model, test, target_test, k=4, n.iter= 1000)
+P   = cpath::cpaths(model, test, k=4, n_paths= 1000)
+
+cpath_summary <- cpath::get_cpath_summary(P)
+cpath::plot_paths(cpath_summary)
+
 
 # Build transition matrix 
-T   = cpath::transition(P, test, target_test)
-T2  = cpath::transition(P, test, target_test, add1=TRUE)
+tran_matrix   = cpath::transition(P)
 
 # Get global feature importances
-IMP = cpath::importance(T)
+IMP = cpath::importance(tran_matrix)
 print(IMP)
 
-IMP_st = cpath::importance(T, agg_type="stationary_distribution")
+IMP_st = cpath::importance(tran_matrix, agg_type="stationary_distribution")
 print(IMP_st)
-
-
-IMP2 = cpath::importance(T2)
-print(IMP2)
-
-IMP2_st = cpath::importance(T2, agg_type="stationary_distribution")
-print(IMP2_st)
 
