@@ -1,3 +1,4 @@
+#'@export
 cpaths <- function(model, data, k=4, n_paths=1000){
 
   paths <- matrix(NaN, nrow=n_paths, ncol=k)

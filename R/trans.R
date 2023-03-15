@@ -1,4 +1,4 @@
-
+#'@export
 transition <- function(cpaths){
   paths <- cpaths$paths[cpaths$counterfactuality,]
   k <- ncol(paths)

@@ -1,3 +1,4 @@
+#'@export
 importance <- function(Tran, agg_type = "matrix"){
 
   if (agg_type == "matrix"){
