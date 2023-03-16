@@ -41,13 +41,10 @@ def cpath(model, test_set: np.ndarray, k: int) -> dict:
     f_start = random.choices(feature_cols_range, k=k)
     cf_path = copy.deepcopy(f_start)
 
-    label_switch_all = np.repeat(False, k)
-    print(f"f_start: {f_start}")
+    label_switch_all = np.repeat(False, test_set_row_nr)
 
     # [4.] For all sampled features ------------------------------------------------------------------------------------
     for xx in range(0, k):
-
-        print(f"xx: {xx}")
 
         test_setX = shuffle_column_values(test_setX, f_start[xx])
         labels_perm = model.predict(test_setX)
@@ -55,17 +52,24 @@ def cpath(model, test_set: np.ndarray, k: int) -> dict:
         # [5.] Predict and check whether label changes -----------------------------------------------------------------
         if not all(v == 0 for v in list(labels_perm)):
 
+            # [6.] Sampling according to Bernoulli distribution --------------------------------------------------------
             p = np.mean(labels != labels_perm)
             stop = np.random.binomial(1, p, 1)[0]
-            print(f"p: {p}, stop: {stop}")
 
+            # [7.] Label permutations ----------------------------------------------------------------------------------
             if stop:
                 label_switch_all = labels != labels_perm
                 label_switch = True
-                cf_path = cf_path[0:xx]
+                cf_path = cf_path[0:(xx+1)]
+
+                # print(f"Cf_Path assign A ::: xx: {xx}, {cf_path}")
+
                 break
         else:
             cf_path = np.repeat(np.nan, k)
+
+            # print(f"Cf_Path assign B ::: xx: {xx}, {cf_path}")
+
             break
 
     # [8.] Return value ------------------------------------------------------------------------------------------------
@@ -75,5 +79,12 @@ def cpath(model, test_set: np.ndarray, k: int) -> dict:
         "label_switch": label_switch,
         "label_switch_all": label_switch_all
     }
+
+    # print("--------- cpath_dict ---------")   # ----------------------------------------------------------------------
+    # print(cpath_dict["orig_path"])
+    # print(cpath_dict["cf_path"])
+    # print(cpath_dict["label_switch"])
+    # print(cpath_dict["label_switch_all"])
+    # print("------------------------------")   # ----------------------------------------------------------------------
 
     return cpath_dict

@@ -15,9 +15,9 @@ def cpaths(model, data, target, k: int = 4, n_iter: int = 1000):
     """
     Cpaths - Many Cpaths
 
-    :param model: TODO
-    :param data:
-    :param target:
+    :param model: Any model that contains the methods fit() and predict(), such as in scikit-learn
+    :param data: input data for prediction
+    :param target: Target values
     :param k: Number of samples
     :param n_iter: Number of iterations
     :return:
@@ -32,9 +32,9 @@ def cpaths(model, data, target, k: int = 4, n_iter: int = 1000):
 
     # [2.] First iteration ---------------------------------------------------------------------------------------------
     for xx in range(0, len(target)):
-        PATHS_l[[xx]] = PATHS
+        PATHS_l[:, :, xx] = PATHS
 
-    # [3.] Second init -------------------------------------------------------------------------------------------------
+    # [3.] Second iteration --------------------------------------------------------------------------------------------
     for xx in range(0, n_iter):
 
         res = cpath(model, data, k=k)
@@ -42,13 +42,20 @@ def cpaths(model, data, target, k: int = 4, n_iter: int = 1000):
 
         for yy in range(0, len(target)):
 
-            PATHS_l[[yy]][xx, 0:len(res["cf_path"])] = res["cf_path"]
+            # PATHS_l[[yy]][xx, 0:len(res["cf_path"])] = res["cf_path"]
+            PATHS_l[xx, 0:len(res["cf_path"]), yy] = res["cf_path"]
+            # print(res["cf_path"])
+            # print(f"PATHS_l[xx, :, yy]: {PATHS_l[xx, :, yy]}")
+
             if yy in ids:
-                PATHS_l[[yy]][xx, k + 1] = True
-                PATHS_l[[yy]][xx, k + 2] = sum(res["label_switch_all"])
+                PATHS_l[xx, k, yy] = True
+                PATHS_l[xx, k + 1, yy] = sum(res["label_switch_all"])
             else:
-                PATHS_l[[yy]][xx, k + 1] = False
-                PATHS_l[[yy]][xx, k + 2] = sum(res["label_switch_all"])
+                PATHS_l[xx, k, yy] = False
+                PATHS_l[xx, k + 1, yy] = sum(res["label_switch_all"])
+
+            # print(f"PATHS_l[xx, :, yy]: {PATHS_l[xx, :, yy]}")
+            # print("-------------------------------------------------")
 
     return PATHS_l
 

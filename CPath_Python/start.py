@@ -14,6 +14,8 @@ from sklearn.model_selection import train_test_split
 from sklearn import tree
 
 from cpath_packs.cpath import cpath
+from cpath_packs.cpaths import cpaths
+from cpath_packs.trans import transition
 
 ########################################################################################################################
 # [0.] Import the iris dataset =========================================================================================
@@ -45,6 +47,14 @@ roc_auc_performance = roc_auc_score(y_test, y_pred)                 # ROC AUC sc
 print(f"ROC-AUC performance regular: {roc_auc_performance}")
 
 ########################################################################################################################
-# [2.] Apply Cpath =====================================================================================================
+# [2.] Apply Cpaths - Get counterfactual paths =========================================================================
 ########################################################################################################################
-cpath(dt_classifier, X_test, 4)
+# cpath(dt_classifier, X_test, 4)
+counterfactual_paths = cpaths(dt_classifier, X_test, y_test, k=4, n_iter=1000)
+# print(counterfactual_paths)
+
+########################################################################################################################
+# [3.] Transition function =============================================================================================
+########################################################################################################################
+EDGES_all = transition(counterfactual_paths, X_test, y_test)
+print(EDGES_all)
