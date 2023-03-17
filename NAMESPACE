@@ -3,6 +3,7 @@
 export(cpaths)
 export(get_cpath_summary)
 export(importance)
+export(plot_deltas)
 export(plot_paths)
 export(sim)
 export(sim2)

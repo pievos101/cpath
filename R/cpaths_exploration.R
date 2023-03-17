@@ -17,45 +17,51 @@ get_cpath_summary <- function(cpaths, only_counterfactual=TRUE){
   }
   k <- ncol(paths)
   
-  paths_df <- data.frame(cbind(paths, swapped_fraction))
-  colnames(paths_df)[1:k] <- paste0("v", 1:k, "_var")
-  colnames(paths_df)[(k+1):(2*k)] <- paste0("v", 1:k, "_sf")
+  paths_agg_tmp <- data.frame(cbind(paths, swapped_fraction))
+  colnames(paths_agg_tmp)[1:k] <- paste0("v", 1:k, "_var")
+  colnames(paths_agg_tmp)[(k+1):(2*k)] <- paste0("v", 1:k, "_sf")
+  
+  diffs <- cbind(swapped_fraction[,1], t(apply(as.matrix(swapped_fraction), 1, diff)))
+  paths_diff_tmp <- data.frame(cbind(paths, diffs))
+  cpath_delta <- data.frame()
+  for (i in 1:k){
+    tmp_res <- aggregate(paths_diff_tmp[,i+k] ~ paths_diff_tmp[,i], paths_diff_tmp, mean)
+    colnames(tmp_res) <- c("var", "sf_delta")
+    tmp_res$node <- paste0("v", i)
+    cpath_delta <- rbind(cpath_delta, tmp_res)
+  }
   
   summaries <- vector("list", k)
-  cols <- colnames(paths_df) 
-  
+  cols <- colnames(paths_agg_tmp) 
   for (i in 1:k){
-    summaries[[i]] <- paths_df %>% 
+    summaries[[i]] <- paths_agg_tmp %>% 
       group_by_at(cols[1:i]) %>% 
       summarise(sf = mean(get(cols[i+k])), count = n())
     colnames(summaries[[i]]) <- c(paste0("v", 1:i, "_var"), paste0("v", i, c("_sf", "_count")))
   }
   
-  
-  cpath_summary <- summaries %>% 
+  cpath_agg <- summaries %>% 
     Reduce(function(dtf1,dtf2) right_join(dtf1,dtf2, multiple="all"), .)
   
-  cpath_summary <- data.frame(cpath_summary)
+  cpath_agg <- data.frame(cpath_agg)
   
-  cpath_summary$count <- cpath_summary[,paste0("v", k, "_count")] 
-  
-  cpath_summary <- cpath_summary[,c(paste0("v", 1:k, "_var"), 
+  cpath_agg$count <- cpath_agg[,paste0("v", k, "_count")] 
+  cpath_agg <- cpath_agg[,c(paste0("v", 1:k, "_var"), 
                                     paste0("v", 1:k, "_sf"), 
                                     paste0("v", 1:k, "_count"), 
                                     "count")]
-  
-  
-  
-  cpath_summary$name <- apply(cpath_summary, 1, name_path, k=k)
-  cpath_summary$max_sf <- apply(cpath_summary[,(k+1):(2*k)], 1, max, na.rm=T)
-  cpath_summary <- data.frame(cpath_summary)
-  cpath_summary
+  cpath_agg$max_sf <- apply(cpath_agg[,(k+1):(2*k)], 1, max, na.rm=T)
+  cpath_agg <- data.frame(cpath_agg)
+  list("cpath_agg" = cpath_agg, "cpath_delta" = cpath_delta)
 }
 
 #'@export
 plot_paths <- function(cpath_summary, n_paths = 50, min_length = 2, 
                        count_threshold = 0, column_names=NULL){
-  cpath_plot <- cpath_summary[complete.cases(cpath_summary[,1:min_length]),]
+  cpath_agg <- cpath_summary$cpath_agg
+  k <- (ncol(cpath_agg) - 2)/3
+  cpath_agg$name <- apply(cpath_agg, 1, name_path, k=k)
+  cpath_plot <- cpath_agg[complete.cases(cpath_agg[,1:min_length]),]
   cpath_plot <- cpath_plot %>%
     filter(count >= count_threshold) %>% 
     select(-count) %>% 
@@ -71,7 +77,7 @@ plot_paths <- function(cpath_summary, n_paths = 50, min_length = 2,
     geom_point(aes(color=factor(var))) +
     facet_wrap(~start_name) +
     scale_size_continuous(name = "Path count", range = c(0.25, 1.5)) +
-    labs(x = "Node", y="Average fraction of swapped labels") +
+    labs(x = "Node", y="Average swapped labels fraction") +
     theme_minimal() 
   
   if (is.null(column_names)){
@@ -83,7 +89,20 @@ plot_paths <- function(cpath_summary, n_paths = 50, min_length = 2,
   p
 }
 
-
-
-
+#'@export
+plot_deltas <- function(cpath_summary, column_names=NULL){
+  cpath_delta <- cpath_summary$cpath_delta
+  cpath_delta$v <- as.factor(cpath_delta$v)
+  cpath_delta$var <-  as.factor(cpath_delta$var)
+  p <- ggplot(cpath_delta, aes(x = var, y = sf_delta, fill = node)) +
+    geom_bar(stat="identity", width = 0.8, position = position_stack(reverse = TRUE)) +
+    scale_fill_brewer(name = "Node", palette = "Set1") + 
+    scale_y_continuous(expand = c(0, 0)) +
+    theme_minimal() + 
+    labs(x = "Variable", y = "Average change of swapped labels fraction")
+  if (!is.null(column_names)){
+    p <- p + scale_x_discrete(labels = column_names)
+  }
+  p
+} 
 

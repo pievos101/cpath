@@ -31,9 +31,10 @@ pred = apply(pred,1,function(x){which.max(x)-1})
 # Get the counterfactual paths
 P   = cpath::cpaths(model, test, k=4, n_paths= 1000)
 
+# Plot path summary
 cpath_summary <- cpath::get_cpath_summary(P)
 cpath::plot_paths(cpath_summary)
-
+cpath::plot_deltas(cpath_summary)
 
 # Build transition matrix 
 tran_matrix   = cpath::transition(P)
@@ -44,4 +45,3 @@ print(IMP)
 
 IMP_st = cpath::importance(tran_matrix, agg_type="stationary_distribution")
 print(IMP_st)
-
