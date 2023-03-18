@@ -3,36 +3,32 @@
 cpath <- function(model, test_set, k){
   labels <- get_predictions(model, test_set)
   
+  n <- nrow(test_set)
+  p <- ncol(test_set)
   test_setX    <- test_set 
   cf_path      <- rep(NaN, k)
-  label_switch <- FALSE
-  
-  # randomly select a feature
-  f_start = sample(1:dim(test_setX)[2], k, replace=TRUE)
-  cf_path = f_start # randomly select a feature
-      
-  label_switch_all = rep(FALSE, nrow(test_set))
-  
-  for (xx in 1:k){
-    
-      test_setX <- permute_column(test_setX, f_start[xx])
-      labels_perm <- get_predictions(model, test_setX)
-      
-  
-      if(!all(labels_perm==0)){
-          # predict and check whether label changes
-          p    = mean(labels!=labels_perm)
-          stop = sample(c(0,1),1,prob=c(1-p,p))
-          if(stop){
-              label_switch_all = (labels!=labels_perm)
-              label_switch = TRUE
-              cf_path = cf_path[1:xx]   
-              break
-          }  
-      }else{cf_path = rep(NaN, k); break}
-  }
-  
-  return(list(orig_path=f_start, cf_path=cf_path, label_switch=label_switch, 
-  label_switch_all=label_switch_all))
+  swapped_fraction <- rep(NaN, k)
+  counterfactuality <- FALSE
+  swapped_observations <- matrix(nrow=k, ncol=n)
 
+  for (xx in 1:k){
+      cf_path[xx] <- sample(1:p, 1)
+      test_setX <- permute_column(test_setX, cf_path[xx])
+      labels_perm <- get_predictions(model, test_setX)
+      swapped_observations[xx,] <- (labels!=labels_perm)
+      fraction <- mean(swapped_observations[xx,])
+      swapped_fraction[xx] <- fraction
+      stop <- sample(c(0,1), 1, prob=c(1-fraction,fraction))
+      if(stop){
+          counterfactuality <- TRUE
+          break
+      }  
+  }
+  reswapped_fraction <- rowSums(apply(swapped_observations, 2, diff) == -1) / n
+  reswapped_fraction <- c(NaN, reswapped_fraction[1:(k-1)])
+  return(list(cf_path=cf_path,
+              swapped_fraction=swapped_fraction,
+              counterfactuality=counterfactuality,
+              reswapped_fraction=reswapped_fraction)
+        )
 }

@@ -1,6 +1,7 @@
 # sim 
 
 # [conditional dependent] - cPATH wins
+#'@export
 sim <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
@@ -33,6 +34,7 @@ return(list(data=data, target=target, noise=1-(count/length(target))))
 }
 
 # not that informative
+#'@export
 sim2 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
@@ -53,6 +55,7 @@ return(list(data=data, target=target))
 }
 
 # [correllated] - 
+#'@export
 sim3 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
@@ -84,6 +87,7 @@ return(list(data=data, target=target, noise=1-(count/length(target))))
 }
 
 # [Features are independent] - LIME wins - cpath looses
+#'@export
 sim4 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
@@ -117,6 +121,7 @@ return(list(data=data, target=target, 1-(count/length(target))))
 }
 
 #[conditional dependent] - CPATH wins
+#'@export
 sim5 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)
@@ -145,6 +150,7 @@ return(list(data=data, target=target))
 }
 
 # [conditional dependent] - cPATH wins
+#'@export
 sim7 <- function(){
 
 data = matrix(rnorm(400, 0, 2), 100, 4)

@@ -54,10 +54,10 @@ print(ModelMetrics::auc(pred, target))
 
 ## CPATH
 # Get the counterfactual paths
-P   = cpath::cpaths(model, data, target, k=4, n.iter= 1000)
+P   = cpath::cpaths(model, data, k=4, n_paths= 1000)
 
 # Build transition matrix 
-T   = cpath::transition(P, data, target)
+T   = cpath::transition(P)
 
 # Get global feature importances
 IMP = cpath::importance(T)
