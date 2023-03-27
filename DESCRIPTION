@@ -1,16 +1,22 @@
 Package: cpath
 Type: Package
 Title: Explaining black-box models through counterfactual paths and conditional permutations
-Version: 1.1
+Version: 1.2
 Date: 2023-01-18
 Author: Bastian Pfeifer
 Maintainer: Bastian Pfeifer <bastianxpfeifer@gmail.com>
 Depends: R (>= 3.5.0)
-Imports: ranger, igraph, ModelMetrics
+Imports: 
+    ranger,
+    igraph,
+    ModelMetrics,
+    dplyr,
+    tidyr,
+    ggplot2
 Description: Explaining black-box models through counterfactual paths and conditional permutations.
 License: GPL (>= 3)
 LazyLoad: yes
 Encoding: UTF-8
 Suggests:
     testthat (>= 3.0.0), hedgehog (>= 0.1.0), stringr
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
