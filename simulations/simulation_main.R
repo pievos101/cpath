@@ -15,7 +15,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim5()
+res  = sim()
 data = res$data
 target = res$target
 
@@ -93,7 +93,7 @@ IMP_lime = feat_imp
 #print(IMP_lime)
 
 # CPATH RL ###########################
-cp_q = cpaths_qlearning(model, data, k=4)
+cp_q = cpath_rl(model, data, k=4)
 
 cp_q_imp = cp_q$importance
 print(cp_q$trans_matrix)
