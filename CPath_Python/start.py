@@ -15,7 +15,10 @@ from sklearn import tree
 
 from cpath_packs.cpath import cpath
 from cpath_packs.cpaths import cpaths
+from cpath_packs.imp import importance
 from cpath_packs.trans import transition
+
+from xai_quality_metrics.xai_sensitivity import sensitivity_n
 
 ########################################################################################################################
 # [0.] Import the iris dataset =========================================================================================
@@ -28,8 +31,9 @@ data = pd.read_csv(os.path.join(data_path, "titanic_train.csv"))
 data = data[data["Age"].notnull()]                              # Filter rows which are nan ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 data["Sex"] = pd.get_dummies(data["Sex"])["female"]             # Dummy code sex (1==Female) ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Create X and y
-X = data[['Age', 'Pclass', 'Sex', 'PassengerId']].values
+# Create X and y -------------------------------------------------------------------------------------------------------
+features_names_list = ['Age', 'Pclass', 'Sex', 'PassengerId']
+X = data[features_names_list].values
 y = data["Survived"].values.astype("float")
 
 ########################################################################################################################
@@ -43,6 +47,9 @@ dt_classifier = tree.DecisionTreeClassifier()
 dt_classifier.fit(X_train, y_train)
 
 y_pred = dt_classifier.predict(X_test)                              # Predict class ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# y_pred_proba = dt_classifier.predict_proba(X_test)
+print(f">>>>>>> Predictions after threshold: {y_pred}")
+
 roc_auc_performance = roc_auc_score(y_test, y_pred)                 # ROC AUC score on test set ~~~~~~~~~~~~~~~~~~~~~~~~
 print(f"ROC-AUC performance regular: {roc_auc_performance}")
 
@@ -54,7 +61,27 @@ counterfactual_paths = cpaths(dt_classifier, X_test, y_test, k=4, n_iter=1000)
 # print(counterfactual_paths)
 
 ########################################################################################################################
-# [3.] Transition function =============================================================================================
+# [3.] Transition matrix ===============================================================================================
 ########################################################################################################################
-EDGES_all = transition(counterfactual_paths, X_test, y_test)
-print(EDGES_all)
+transition_matrix = transition(counterfactual_paths, X_test, y_test)
+print(transition_matrix)
+
+########################################################################################################################
+# [4.] Compute the importance ==========================================================================================
+########################################################################################################################
+IMP = importance(transition_matrix)
+importance_normalized = IMP/sum(IMP)
+print("---------------------------------------------------------------------------------------------------------------")
+print("Importance per feature:")
+print(features_names_list)
+print(importance_normalized)
+print("---------------------------------------------------------------------------------------------------------------")
+
+########################################################################################################################
+# [5.] XAI Sensitivity-N metric ========================================================================================
+########################################################################################################################
+print("Sensitivity for Training set:")
+sensitivity_n(dt_classifier, X_train, features_names_list, importance_normalized)
+
+print("Sensitivity for Test set:")
+sensitivity_n(dt_classifier, X_test, features_names_list, importance_normalized)
