@@ -18,6 +18,7 @@ from cpath_packs.cpaths import cpaths
 from cpath_packs.imp import importance
 from cpath_packs.trans import transition
 
+from xai_quality_metrics.xai_infidelity import infidelity
 from xai_quality_metrics.xai_sensitivity import sensitivity_n
 
 ########################################################################################################################
@@ -78,10 +79,19 @@ print(importance_normalized)
 print("---------------------------------------------------------------------------------------------------------------")
 
 ########################################################################################################################
-# [5.] XAI Sensitivity-N metric ========================================================================================
+# [5.] XAI Infidelity metric ===========================================================================================
 ########################################################################################################################
-print("Sensitivity for Training set:")
-sensitivity_n(dt_classifier, X_train, features_names_list, importance_normalized)
+print("Infidelity of Training Set:")
+infidelity(dt_classifier, X_train, features_names_list, importance_normalized)
 
-print("Sensitivity for Test set:")
-sensitivity_n(dt_classifier, X_test, features_names_list, importance_normalized)
+print("Infidelity of Test Set:")
+infidelity(dt_classifier, X_test, features_names_list, importance_normalized)
+
+########################################################################################################################
+# [6.] XAI Sensitivity-N metric ========================================================================================
+########################################################################################################################
+# print("Sensitivity of Training set:")
+# sensitivity_n(dt_classifier, X_train, features_names_list, importance_normalized)
+
+# print("Sensitivity of Test set:")
+# sensitivity_n(dt_classifier, X_test, features_names_list, importance_normalized)

@@ -9,7 +9,12 @@
 import copy
 import itertools
 
+from captum.attr import Saliency
+from captum.metrics import sensitivity_max
+
 from scipy.stats import pearsonr, spearmanr
+import torch
+import torchvision
 
 
 def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: list) -> float:
@@ -82,4 +87,32 @@ def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: l
     print('Spearman correlation: %.3f' % spearman_corr)
 
     print("===========================================================================================================")
+
+
+def sensitivity_max_captum(model, x_data, features_names_list: list, attribution_map_e: list) -> float:
+    """
+    Use the Sensitivity-Max from Captum
+
+    :param model:
+    :param x_data:
+    :param features_names_list:
+    :param attribution_map_e:
+    :return:
+    """
+
+    # ImageClassifier takes a single input tensor of images Nx3x224x224, -----------------------------------------------
+    # and returns an Nx10 tensor of class probabilities. ---------------------------------------------------------------
+    net = torchvision.models.vgg19(pretrained=True)
+    saliency = Saliency(net)
+    print("Saliency and saliency.attribute")
+    print(saliency)
+    print(saliency.attribute)
+
+    images_nr = 5
+    print(f"Nr. of images: {images_nr}")
+    input = torch.randn(images_nr, 3, 224, 224, requires_grad=True)
+
+    # Computes sensitivity score for saliency maps of class 3 ----------------------------------------------------------
+    sens = sensitivity_max(saliency.attribute, input, target=3)
+    print(f">>>>>>>>>>>>>>> Sensitivity-Max of Captum: {sens}")
 
