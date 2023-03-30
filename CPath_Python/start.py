@@ -8,7 +8,9 @@
 
 import os
 
+import numpy as np
 import pandas as pd
+import shap
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import train_test_split
 from sklearn import tree
@@ -17,9 +19,14 @@ from cpath_packs.cpath import cpath
 from cpath_packs.cpaths import cpaths
 from cpath_packs.imp import importance
 from cpath_packs.trans import transition
-
+from utils.utilities import shap_values_aggr
 from xai_quality_metrics.xai_infidelity import infidelity
 from xai_quality_metrics.xai_sensitivity import sensitivity_n
+
+
+########################################################################################################################
+######################################### *** CPATH *** ################################################################
+########################################################################################################################
 
 ########################################################################################################################
 # [0.] Import the iris dataset =========================================================================================
@@ -49,7 +56,6 @@ dt_classifier.fit(X_train, y_train)
 
 y_pred = dt_classifier.predict(X_test)                              # Predict class ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # y_pred_proba = dt_classifier.predict_proba(X_test)
-print(f">>>>>>> Predictions after threshold: {y_pred}")
 
 roc_auc_performance = roc_auc_score(y_test, y_pred)                 # ROC AUC score on test set ~~~~~~~~~~~~~~~~~~~~~~~~
 print(f"ROC-AUC performance regular: {roc_auc_performance}")
@@ -65,15 +71,18 @@ counterfactual_paths = cpaths(dt_classifier, X_test, y_test, k=4, n_iter=1000)
 # [3.] Transition matrix ===============================================================================================
 ########################################################################################################################
 transition_matrix = transition(counterfactual_paths, X_test, y_test)
-print(transition_matrix)
 
 ########################################################################################################################
 # [4.] Compute the importance ==========================================================================================
 ########################################################################################################################
 IMP = importance(transition_matrix)
 importance_normalized = IMP/sum(IMP)
+
+print("###############################################################################################################")
+print("######################################### *** CPATH *** #######################################################")
+print("###############################################################################################################")
 print("---------------------------------------------------------------------------------------------------------------")
-print("Importance per feature:")
+print("CPATH Importance per feature:")
 print(features_names_list)
 print(importance_normalized)
 print("---------------------------------------------------------------------------------------------------------------")
@@ -90,8 +99,45 @@ infidelity(dt_classifier, X_test, features_names_list, importance_normalized)
 ########################################################################################################################
 # [6.] XAI Sensitivity-N metric ========================================================================================
 ########################################################################################################################
-# print("Sensitivity of Training set:")
-# sensitivity_n(dt_classifier, X_train, features_names_list, importance_normalized)
+print("---------------------------------------------------------------------------------------------------------------")
+print("Sensitivity of Training set:")
+sensitivity_n(dt_classifier, X_train, features_names_list, importance_normalized)
 
-# print("Sensitivity of Test set:")
-# sensitivity_n(dt_classifier, X_test, features_names_list, importance_normalized)
+print("Sensitivity of Test set:")
+sensitivity_n(dt_classifier, X_test, features_names_list, importance_normalized)
+
+########################################################################################################################
+######################################### *** SHAP *** #################################################################
+########################################################################################################################
+print("###############################################################################################################")
+print("######################################### *** SHAP *** ########################################################")
+print("###############################################################################################################")
+
+explainer = shap.Explainer(dt_classifier)
+shap_values = explainer(X)
+
+shap_feature_importance_list = shap_values_aggr(features_names_list, shap_values)
+
+print("---------------------------------------------------------------------------------------------------------------")
+print("SHAP Importance per feature:")
+print(features_names_list)
+print(shap_feature_importance_list)
+print("---------------------------------------------------------------------------------------------------------------")
+
+# print("~~~~~~~~~~~~~~~~~~~~~~~~~~~ SHAP values: ~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+# shap.summary_plot(shap_values, X_train, feature_names=features_names_list)
+
+print("Infidelity of Training Set:")
+infidelity(dt_classifier, X_train, features_names_list, shap_feature_importance_list)
+
+print("Infidelity of Test Set:")
+infidelity(dt_classifier, X_test, features_names_list, shap_feature_importance_list)
+
+print("---------------------------------------------------------------------------------------------------------------")
+
+print("Sensitivity of Training set:")
+sensitivity_n(dt_classifier, X_train, features_names_list, shap_feature_importance_list)
+
+print("Sensitivity of Test set:")
+sensitivity_n(dt_classifier, X_test, features_names_list, shap_feature_importance_list)
+

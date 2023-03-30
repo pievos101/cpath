@@ -45,7 +45,7 @@ def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: l
         for features_set in features_combinations_list:
 
             features_set_list = list(features_set)
-            print(f"Features set: {features_set_list}")
+            # print(f"Features set: {features_set_list}")
 
             # Create the instance that has some features "inactive" ----------------------------------------------------
             x_data_S_i = copy.deepcopy(x_data)
@@ -71,20 +71,20 @@ def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: l
             m_predictions_diff_all_data = m_X_c - m_X_S_i_c
 
             m_predictions_diff = sum(m_predictions_diff_all_data)/len(m_predictions_diff_all_data)
-            print(f"Prediction Diff: {m_predictions_diff}")
+            # print(f"Prediction Diff: {m_predictions_diff}")
             all_predictions_differences_list.append(m_predictions_diff)
-            print("---------------------------------------------------------------------------------------------------")
+            # print("---------------------------------------------------------------------------------------------------")
 
     # [6.] Pearson correlation -----------------------------------------------------------------------------------------
-    print("\n")
-    print("-----------------------------------------------------------------------------------------------------------")
+    # print("\n")
+    # print("-----------------------------------------------------------------------------------------------------------")
     pearson_corr, _ = pearsonr(all_attribution_sums_list, all_predictions_differences_list)
-    print('Pearsons correlation: %.3f' % pearson_corr)
+    print('Sensitivity-n - Pearsons correlation: %.3f' % pearson_corr)
 
     # [7.] Spearman correlation ----------------------------------------------------------------------------------------
     print("-----------------------------------------------------------------------------------------------------------")
     spearman_corr, _ = spearmanr(all_attribution_sums_list, all_predictions_differences_list)
-    print('Spearman correlation: %.3f' % spearman_corr)
+    print('Sensitivity-n - Spearman correlation: %.3f' % spearman_corr)
 
     print("===========================================================================================================")
 
