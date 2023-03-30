@@ -61,3 +61,5 @@ def infidelity(model, x_data, features_names_list: list, attribution_map_e: list
 
     print(f"Infidelity: {infidelity_mean}")
 
+    return infidelity_mean
+

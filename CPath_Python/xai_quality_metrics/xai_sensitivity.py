@@ -9,15 +9,16 @@
 import copy
 import itertools
 
+import numpy as np
 from captum.attr import Saliency
 from captum.metrics import sensitivity_max
 
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import kendalltau, pearsonr, spearmanr
 import torch
 import torchvision
 
 
-def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: list) -> float:
+def sensitivity_n(model, x_data: np.ndarray, features_names_list: list, attribution_map_e: list) -> float:
     """
     Compute the Sensitivity-N
 
@@ -73,11 +74,11 @@ def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: l
             m_predictions_diff = sum(m_predictions_diff_all_data)/len(m_predictions_diff_all_data)
             # print(f"Prediction Diff: {m_predictions_diff}")
             all_predictions_differences_list.append(m_predictions_diff)
-            # print("---------------------------------------------------------------------------------------------------")
+            # print("-------------------------------------------------------------------------------------------------")
 
     # [6.] Pearson correlation -----------------------------------------------------------------------------------------
     # print("\n")
-    # print("-----------------------------------------------------------------------------------------------------------")
+    # print("---------------------------------------------------------------------------------------------------------")
     pearson_corr, _ = pearsonr(all_attribution_sums_list, all_predictions_differences_list)
     print('Sensitivity-n - Pearsons correlation: %.3f' % pearson_corr)
 
@@ -86,7 +87,14 @@ def sensitivity_n(model, x_data, features_names_list: list, attribution_map_e: l
     spearman_corr, _ = spearmanr(all_attribution_sums_list, all_predictions_differences_list)
     print('Sensitivity-n - Spearman correlation: %.3f' % spearman_corr)
 
+    # [8.] Kendall's Tau -----------------------------------------------------------------------------------------------
+    print("-----------------------------------------------------------------------------------------------------------")
+    kendalls_tau, kendalls_p_value = kendalltau(all_attribution_sums_list, all_predictions_differences_list)
+    print(f'Kendalls Tau: {kendalls_tau}, Kendalls P-Value: {kendalls_p_value}')
+
     print("===========================================================================================================")
+
+    return pearson_corr
 
 
 def sensitivity_max_captum(model, x_data, features_names_list: list, attribution_map_e: list) -> float:
