@@ -73,7 +73,5 @@ def transition(PATHS_l, data, target, add1: bool = False) -> dict:
                         EDGES_l[int(PATHS_l[xx, yy, aa]), int(PATHS_l[xx, zz, aa]), aa] + \
                         np.nansum(PATHS_l[xx, :, aa]) + 1                               # penalty on path length -------
 
-    EDGES_all = np.sum(EDGES_l, axis=2)
-
-    return EDGES_all, EDGES_l
+    return EDGES_l
 
