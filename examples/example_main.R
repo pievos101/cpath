@@ -2,7 +2,7 @@
 library(ranger)
 library(cpath)
 
-res  = sim()
+res  = sim7()
 data = res$data
 target = res$target
 
