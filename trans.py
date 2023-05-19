@@ -75,5 +75,5 @@ def transition(PATHS_l, data, target, add1: bool = False) -> dict:
 
     EDGES_all = np.sum(EDGES_l, axis=2)
 
-    return EDGES_all
+    return EDGES_all, EDGES_l
 
