@@ -30,7 +30,8 @@ def importance(EDGES_l) -> dict:
     for xx in range(EDGES_l.shape[2]):
         ncols   = EDGES_all[:,:,xx].shape[1]
         sumALL  = EDGES_all[:,:,xx].sum()
-        IMP_local = IMP_local.append(EDGES_all[:,:,xx].sum(axis=0)/sumALL)
+        IMP_xx  = EDGES_all[:,:,xx].sum(axis=0)/sumALL
+        IMP_local = IMP_local.append(IMP_xx)
     
     importance_dict={}
     importance_dict["global"] = IMP_global
