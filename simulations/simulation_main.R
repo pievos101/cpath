@@ -15,7 +15,7 @@ for(ii in 1:n.sim){
 
 cat(ii, " of ", n.sim, "\n")
 
-res  = sim()
+res  = sim5()# conditional dependency (2)
 data = res$data
 target = res$target
 
