@@ -58,14 +58,14 @@ pred = predict(model, test)$predictions
 pred = apply(pred,1,function(x){which.max(x)-1})
 
 # Get the counterfactual paths
-P   = cpath::cpaths(model, test, target_test, k=4, n.iter= 1000)
+P   = cpath::cpaths(model, test, k=4, n_paths = 1000)
 
 # Build transition matrix 
-T   = cpath::transition(P, test, target_test)
+T   = cpath::transition(P)
 
 # Get global feature importances
 IMP = cpath::importance(T)
-print(IMP/sum(IMP))
+print(IMP)
 
 # The RL Q-Learning alternative
 cp_q <- cpaths_qlearning(model, test, k=4)

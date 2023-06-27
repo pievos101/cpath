@@ -1,5 +1,5 @@
 #'@export
-importance <- function(Tran, agg_type = "matrix"){
+importance <- function(Tran, agg_type = "stationary_distribution"){
 
   if (agg_type == "matrix"){
     IMP_all = colSums(Tran)/sum(Tran)
