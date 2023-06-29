@@ -71,3 +71,20 @@ print(IMP)
 cp_q <- cpaths_qlearning(model, test, k=4)
 print(cp_q$importance)
 ```
+
+## CITATION
+If you find cpath useful please cite 
+
+```
+@software{cpath2023,
+  author = {Bastian, Pfeifer and Mateusz, Krzyzinski and Hubert, Baniecki and Anna, Saranti and Andreas, Holzinger and Przemyslaw, Biecek},
+  doi = {},
+  month = {},
+  title = {{Explaining black-box models through counterfactual paths and conditional permutations}},
+  url = {https://github.com/pievos101/cpath},
+  version = {1.2},
+  year = {2023}
+}
+```
+
+A scientific paper is in progress and will be available soon.
