@@ -54,7 +54,7 @@ colnames(data) = NN
 data = as.data.frame(data)
 
 target = PimaIndiansDiabetes[,9]
-target = factor(target)#, levels=c("setosa", "versicolor"))
+target = factor(target)
 
 # Sonar
 data(Sonar)
@@ -70,26 +70,43 @@ data = as.data.frame(data)
 
 target = Sonar[,61]
 target = factor(target)#, levels=c("setosa", "versicolor"))
+
+# Iris
+data(iris)
+
+na.ids = which(apply(iris,1,function(x){any(is.na(x))}))
+#iris = iris[-na.ids,]
+data   = iris[1:100,1:4]
+NN = colnames(data)
+data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
+#data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
+colnames(data) = NN
+data = as.data.frame(data)
+
+target = iris[1:100,5]
+target = factor(target, levels=c("setosa", "versicolor"))
+
 
 ############################################
 ## CURRENT DATA
 ############################################
 
-# Sonar
-data(Sonar)
+# Iris
+data(iris)
 
-na.ids = which(apply(Sonar,1,function(x){any(is.na(x))}))
-#Ionosphere = Ionosphere[-na.ids,]
-data   = Sonar[,1:8]
+na.ids = which(apply(iris,1,function(x){any(is.na(x))}))
+#iris = iris[-na.ids,]
+data   = iris[1:100,1:4]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = Sonar[,61]
-target = factor(target)#, levels=c("setosa", "versicolor"))
-#####
+target = iris[1:100,5]
+target = factor(target, levels=c("setosa", "versicolor"))
+
+######################################################
 ######################################################
 
 # train-test split 
@@ -139,8 +156,6 @@ for(xx in 1:n_iter){
 
     # Get global feature importances
     IMP = cpath::importance(tran_matrix)
-    IMP = IMP/sum(IMP)
-
 
     ## SHAP ###############################
     print("SHAP")
