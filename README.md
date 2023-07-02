@@ -67,9 +67,18 @@ T   = cpath::transition(P)
 IMP = cpath::importance(T)
 print(IMP)
 
-# The RL Q-Learning alternative
+# Get summary of the counterfactual paths
+cpath_summary = get_cpath_summary(P)
+
+# Plot the paths
+plot_paths(cpath_summary)
+
+####################################
+# The RL Q-Learning solution
+####################################
 cp_q <- cpaths_rl(model, test, k=4)
 print(cp_q$importance)
+
 ```
 
 ## CITATION
