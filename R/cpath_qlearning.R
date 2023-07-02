@@ -4,7 +4,7 @@ choose_action_Q <- function(Q_row_state, states, epsilon){
     next_state <- sample(states, 1)
   }
   else {
-    next_state <- sample(states, 1, prob=Q_row_state) #which.max(Q_row_state)
+    next_state <- which.max(Q_row_state) #sample(states, 1, prob=Q_row_state) #
   }
   next_state
 }
@@ -12,7 +12,7 @@ choose_action_Q <- function(Q_row_state, states, epsilon){
 
 # Q-learning
 # action <-> next state (variable)
-cpaths_qlearning <- function(model, test_set, k, n_iter=1000, 
+cpath_qlearning <- function(model, test_set, k, n_iter=1000, 
                              epsilon=0.05, alpha=0.05, gamma=0.2,
                              random_stopping=TRUE){
   p <- ncol(test_set)

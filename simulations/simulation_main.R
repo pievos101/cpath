@@ -8,6 +8,7 @@ COR_cpath     = rep(NaN, n.sim)
 COR_shap      = rep(NaN, n.sim)
 COR_between   = rep(NaN, n.sim)
 COR_lime      = rep(NaN, n.sim)
+COR_cpath_Q   = rep(NaN, n.sim)
 COR_cpath_RL  = rep(NaN, n.sim)
 
 # SIM
@@ -92,20 +93,27 @@ IMP_lime = feat_imp
 #print("LIME values")
 #print(IMP_lime)
 
-# CPATH RL ###########################
-cp_q = cpath_rl(model, data, k=4)
 
-cp_q_imp = cp_q$importance
-print(cp_q$trans_matrix)
-print("CPATH RL values")
-print(cp_q_imp)
+# CPATH Q ###########################
+#cp_q <- cpath_qlearning(model, data, k=4)
+#cp_q_imp <- cp_q$importance
+
+# CPATH RL ###########################
+cp_rl = cpath_rl(model, data, k=4)
+
+cp_rl_imp = cp_rl$importance
+#print(cp_q$trans_matrix)
+#print("CPATH RL values")
+#print(cp_q_imp)
+
 
 # GINI importance
 vimp = model$variable.importance
 ids = vimp!=0
 
-print("GINI importance")
-print(vimp[ids])
+
+#print("GINI importance")
+#print(vimp[ids])
 
 #print("Correlation SHAP")
 cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
@@ -117,18 +125,20 @@ cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
 cor_cpath = cor(vimp[ids], IMP[ids], method="spearman")
 #print(cor_cpath)
 #print("Correlation cpath RL")
-cor_cpath_RL = cor(vimp[ids], cp_q_imp[ids], method="spearman")
+#cor_cpath_Q = cor(vimp[ids], cp_q_imp[ids], method="spearman")
+#print(cor_cpath_RL)
+cor_cpath_RL = cor(vimp[ids], cp_rl_imp[ids], method="spearman")
 #print(cor_cpath_RL)
 
 
 COR_cpath[ii] = cor_cpath
 COR_shap[ii] = cor_shap
 COR_lime[ii] = cor_lime
+#COR_cpath_Q[ii]  = cor_cpath_Q
 COR_cpath_RL[ii]  = cor_cpath_RL
 
-
-RES = cbind(COR_cpath, COR_shap, COR_lime, COR_cpath_RL)
-colnames(RES) = c("CPATH", "SHAP","LIME", "CPATH_RL")
+RES = cbind(COR_shap, COR_lime, COR_cpath, COR_cpath_RL)
+colnames(RES) = c( "SHAP","LIME", "CPATH", "CPATH_RL")
 print(RES)
 
 } # End of simulation
