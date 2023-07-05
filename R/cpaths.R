@@ -1,5 +1,5 @@
 #'@export
-cpaths <- function(model, data, k=4, n_paths=1000){
+cpaths <- function(model, data, k=4, n_paths=1000, graph=NaN){
 
   paths <- matrix(NaN, nrow=n_paths, ncol=k)
   swapped_fractions <- matrix(NaN, nrow=n_paths, ncol=k)
@@ -8,7 +8,7 @@ cpaths <- function(model, data, k=4, n_paths=1000){
   lengths <- rep(NaN, n_paths)
   
   for (xx in 1:n_paths){
-    cpath <- cpath(model, data, k=k)
+    cpath <- cpath(model, data, k=k, graph)
     paths[xx, ] <- cpath$cf_path[1:k]
     swapped_fractions[xx, ] <- cpath$swapped_fraction
     reswapped_fraction[xx, ] <- cpath$reswapped_fraction

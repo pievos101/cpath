@@ -1,6 +1,6 @@
 # main
 
-cpath <- function(model, test_set, k){
+cpath <- function(model, test_set, k, graph=NaN){
   labels <- get_predictions(model, test_set)
   
   n <- nrow(test_set)
@@ -11,8 +11,15 @@ cpath <- function(model, test_set, k){
   counterfactuality <- FALSE
   swapped_observations <- matrix(nrow=k, ncol=n)
 
+  if(is.na(graph)[1]){
+    SAMPLE = sample(1:p, k)
+  }else{
+    SAMPLE = random_walk(g, sample(1:p, 1), k)
+  }
+
   for (xx in 1:k){
-      cf_path[xx] <- sample(1:p, 1)
+      
+      cf_path[xx] <- SAMPLE[xx] #sample(1:p, 1)
       test_setX <- permute_column(test_setX, cf_path[xx])
       labels_perm <- get_predictions(model, test_setX)
       swapped_observations[xx,] <- (labels!=labels_perm)
