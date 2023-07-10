@@ -37,7 +37,7 @@ cpaths_mc <- function(model, data, k=4, n_paths=1000, graph=NaN, ncores=NaN){
   cl <- makeCluster(ncores)
   registerDoParallel(cl)
 
-  res <- foreach(i = 1:n_paths, .packages = c("ranger", 
+  res <- foreach(i = 1:n_paths, .packages = c("ranger", "igraph", 
         "cpath")) %dopar% {
       #res <- cpaths(model, data, k=k, n_paths=1, graph)
       arun = cpath(model, data, k=k, graph)
