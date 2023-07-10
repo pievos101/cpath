@@ -1,5 +1,5 @@
 # main
-
+#'@export
 cpath <- function(model, test_set, k, graph=NaN){
   labels <- get_predictions(model, test_set)
   

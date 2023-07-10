@@ -3,10 +3,14 @@ library(igraph)
 library(cpath)
 library(ranger)
 
-p <- 50 # number of nodes
+p = 30 # number of nodes
 n_iter = 50
+npaths = 100 
+k_length = 20
+
 COVERAGE = matrix(NaN, n_iter, 2)
 colnames(COVERAGE) =c("noG","G")
+
 
 for (xx in 1:n_iter){
 
@@ -63,6 +67,13 @@ for (xx in 1:n_iter){
     #X[,ncn2] = X[,cn2]
     X = as.data.frame(X)
 
+    # Train test split 
+    #id <- sample(nrow(df), round(nrow(df)*2/3))
+    #X_train <- X[id,]
+    #X_test <- X[-id,]
+    #y_train <- as.factor(target[id])
+    #y_test <- as.factor(target[-id])
+
     # Train the model
     
     # Train a random forest classifier
@@ -84,8 +95,9 @@ for (xx in 1:n_iter){
     ######################
 
     # Get the counterfactual paths
-    P   = cpath::cpaths(model, X, k=4, n_paths = 100)
+    P   = cpath::cpaths(model, X, k=k_length, n_paths = npaths)
     if(sum(P$counterfactuality==TRUE)<=1){
+        print("No counterfactuals")
         next
     }
 
@@ -108,9 +120,10 @@ for (xx in 1:n_iter){
     ######################
 
     # Get the counterfactual paths
-    P   = cpath::cpaths(model, X, k=4, n_paths = 100, g)
+    P   = cpath::cpaths(model, X, k=k_length, n_paths = npaths, g)
 
     if(sum(P$counterfactuality==TRUE)<=1){
+        print("No counterfactuals")
         next
     }
     # Build transition matrix 
@@ -134,10 +147,66 @@ print(COVERAGE)
 
 
 stop()
-# Train test split 
-id <- sample(nrow(df), round(nrow(df)*2/3))
-df_train <- df[id,]
-df_test <- df[-id,]
-X_test <- df_test %>% select(-target)
-y_test <- df_test$target
-df_train$target <- as.factor(df_train$target)
+
+library(ggplot2)
+library(reshape)
+
+##############################
+# plot varying 
+##############################
+k_length = c(3, 4, 7, 10, 20)
+cpath_cov = c(0.59, 0.60, 0.70, 0.82, 0.77)
+cpath_graph_cov = c(0.67, 0.74, 0.74, 0.77, 0.57)
+
+df = cbind(cpath_cov, cpath_graph_cov)
+colnames(df) = c("CPATH","CPATH_know")
+df_melt = melt(df)
+df_melt[,1] = k_length
+
+colnames(df_melt) = c("signal","method","value")
+df_melt$value  <- as.numeric(df_melt$value)
+df_melt$signal <- as.numeric(df_melt$signal)
+
+p <- ggplot(df_melt, aes(x=signal, y=value, group=method)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  geom_line(aes(color=method), size=1)+
+  geom_point(aes(color=method), size=2)+
+  #scale_x_reverse()+
+  ylab("Coverage") +
+  xlab("Length of paths (k)")+
+  scale_x_continuous(name="Length of paths (k)", breaks=k_length,
+  labels=as.character(k_length), guide = guide_axis(angle = 90)) +
+  #scale_x_reverse(labels=rev(c("2/2", "2/4", "2/6", "2/8", "2/10")))+
+  theme_minimal() 
+p
+
+
+############################################
+# plot varying npaths
+############################################
+
+npaths = c(20, 50, 100, 500, 1000)
+cpath_cov = c(0.455, 0.564, 0.60, 0.78, 0.87 )
+cpath_graph_cov = c(0.591, 0.679, 0.74, 0.82, 0.90 ) 
+
+df = cbind(cpath_cov, cpath_graph_cov)
+colnames(df) = c("CPATH","CPATH_know")
+df_melt = melt(df)
+df_melt[,1] = npaths
+
+colnames(df_melt) = c("signal","method","value")
+df_melt$value  <- as.numeric(df_melt$value)
+df_melt$signal <- as.numeric(df_melt$signal)
+
+p <- ggplot(df_melt, aes(x=signal, y=value, group=method)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  geom_line(aes(color=method), size=1)+
+  geom_point(aes(color=method), size=2)+
+  #scale_x_reverse()+
+  ylab("Coverage") +
+  xlab("Number of paths")+
+  scale_x_continuous(name="Number of paths", breaks=npaths,
+  labels=as.character(npaths), guide = guide_axis(angle = 90)) +
+  #scale_x_reverse(labels=rev(c("2/2", "2/4", "2/6", "2/8", "2/10")))+
+  theme_minimal() 
+p
