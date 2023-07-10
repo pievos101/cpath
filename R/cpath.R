@@ -14,7 +14,7 @@ cpath <- function(model, test_set, k, graph=NaN){
   if(is.na(graph)[1]){
     SAMPLE = sample(1:p, k)
   }else{
-    SAMPLE = random_walk(g, sample(1:p, 1), k)
+    SAMPLE = random_walk(graph, sample(1:p, 1), k)
   }
 
   for (xx in 1:k){
