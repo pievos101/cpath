@@ -44,6 +44,8 @@ cpaths_mc <- function(model, data, k=4, n_paths=1000, graph=NaN, ncores=NaN){
       arun
   }
 
+stopCluster(cl)
+
 ALL = Reduce('rbind', res)
 paths = Reduce('rbind', ALL[,1])
 swapped_fractions = Reduce('rbind', ALL[,2])
@@ -57,5 +59,5 @@ return(list(paths = paths,
               counterfactuality = counterfactuality,
               p = ncol(data)
               ))
-              
+
 }
