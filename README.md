@@ -86,15 +86,12 @@ print(cp_q$importance)
 If you find cpath useful please cite 
 
 ```
-@software{cpath2023,
-  author = {Bastian, Pfeifer and Mateusz, Krzyzinski and Hubert, Baniecki and Anna, Saranti and Andreas, Holzinger and Przemyslaw, Biecek},
-  doi = {},
-  month = {},
-  title = {{Explaining black-box models through counterfactual paths and conditional permutations}},
-  url = {https://github.com/pievos101/cpath},
-  version = {1.2},
-  year = {2023}
+@misc{pfeifer2023explainable,
+      title={Explainable AI with counterfactual paths}, 
+      author={Bastian Pfeifer and Mateusz Krzyzinski and Hubert Baniecki and Anna Saranti and Andreas Holzinger and Przemyslaw Biecek},
+      year={2023},
+      eprint={2307.07764},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI}
 }
 ```
-
-A scientific paper is in progress and will be available soon.
