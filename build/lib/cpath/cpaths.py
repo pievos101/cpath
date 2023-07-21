@@ -162,7 +162,7 @@ def importance(EDGES_l) -> dict:
 
 
 
-def transition(PATHS_l, data, target, add1 = False) -> dict:
+def transition(PATHS_l, data, target, add1 = False):
     """
     Transition function
 

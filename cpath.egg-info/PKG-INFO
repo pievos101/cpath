@@ -33,7 +33,6 @@ License-File: LICENSE
 <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
 </p>
 
-
 # Explainable AI with counterfactual paths
 
 ## Usage
@@ -102,20 +101,28 @@ pred = clf.predict(X_test)
 ### Explain using cpath
 
 ```python
-    
+
+P = cpath.cpaths(clf, X_test, y_test)
+
+T = cpath.transition(P, X_test, y_test)
+
+IMP = cpath.importance(T)
+
+IMP["global"]
+
 ```
 
 ## Citation
 If you find cpath please cite
 
 ```
-@misc{pfeifer2023bayesian,
-      title={Bayesian post-hoc regularization of random forests}, 
-      author={Bastian Pfeifer},
+@misc{pfeifer2023explainable,
+      title={Explainable AI with counterfactual paths}, 
+      author={Bastian Pfeifer and Mateusz Krzyzinski and Hubert Baniecki and Anna Saranti and Andreas Holzinger and Przemyslaw Biecek},
       year={2023},
-      eprint={2306.03702},
+      eprint={2307.07764},
       archivePrefix={arXiv},
-      primaryClass={cs.LG}
+      primaryClass={cs.AI}
 }
 ```
 
