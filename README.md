@@ -9,19 +9,12 @@
 Install the Python package cpath via pip
 
 ```python
-pip install cpath
-```
-
-and import  
-
-```python
-import cpath
-```
-
-or from source 
-
-```python
 pip install ./cpath
+```
+
+Import package 
+
+```python
 import cpath
 ```
 
