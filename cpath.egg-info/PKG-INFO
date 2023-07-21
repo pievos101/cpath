@@ -1,0 +1,122 @@
+Metadata-Version: 2.1
+Name: cpath
+Version: 0.0.1
+Summary: Explainable AI with counterfactual paths
+Home-page: https://github.com/pievos101/cpath
+Author: Bastian Pfeifer
+Author-email: bastian.pfeifer@medunigraz.at
+License: MIT
+Keywords: Explainable AI,counterfactuals
+Platform: UNKNOWN
+Classifier: Development Status :: 1 - Planning
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3 :: Only
+Classifier: Topic :: Software Development
+Classifier: Topic :: Scientific/Engineering
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+
+<p align="center">
+<img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
+</p>
+
+
+# Explainable AI with counterfactual paths
+
+## Usage
+
+Install the Python package cpath via pip
+
+```python
+pip install cpath
+```
+
+and import  
+
+```python
+import cpath
+```
+
+or from source 
+
+```python
+pip install ./cpath
+import cpath
+```
+
+Other imports
+
+```python
+from imodels.util.data_util import get_clean_dataset
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import balanced_accuracy_score
+from sklearn.metrics import roc_auc_score
+
+import sys
+```
+
+Example data set 
+
+```python
+clf_datasets = [
+    ("breast-cancer", "breast_cancer", "imodels")
+]
+
+# Read in data set
+X, y, feature_names = get_clean_dataset('breast_cancer', data_source='imodels')
+
+# train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20)
+
+```
+
+### Random Forest 
+
+```python
+
+# number of trees 
+ntrees = 10
+
+clf = RandomForestClassifier(n_estimators=ntrees) 
+clf.fit(X_train, y_train)
+pred = clf.predict(X_test)
+
+```
+
+### Explain using cpath
+
+```python
+    
+```
+
+## Citation
+If you find cpath please cite
+
+```
+@misc{pfeifer2023bayesian,
+      title={Bayesian post-hoc regularization of random forests}, 
+      author={Bastian Pfeifer},
+      year={2023},
+      eprint={2306.03702},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
+
+
