@@ -68,9 +68,10 @@ P = cpath.cpaths(clf, X_test, y_test)
 
 T = cpath.transition(P, X_test, y_test)
 
-IMP = cpath.importance(T)
+Imp = cpath.importance(T)
 
-IMP["global"]
+Imp["global"] # global explanations
+Imp["local"] # local explanations
 
 ```
 
