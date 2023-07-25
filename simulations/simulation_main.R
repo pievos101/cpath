@@ -22,7 +22,7 @@ target = res$target
 
 while(TRUE){
 
-    model = ranger(x=data,y=target, 
+    model = ranger(x=data,y=as.factor(target), 
                 num.trees=100, 
                 classification=TRUE, 
                 probability=TRUE, 
