@@ -6,9 +6,8 @@ https://arxiv.org/abs/2307.07764
 
 <p align="center">
     <a href="https://arxiv.org/abs/2307.07764">
-        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="300">
+        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="319">
     </a>
-
     <a href="https://arxiv.org/abs/2307.07764">
         <img src="cpath.png" width="400">
     </a>
