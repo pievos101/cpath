@@ -5,16 +5,20 @@
 https://arxiv.org/abs/2307.07764
 
 <p align="center">
-<a href="https://arxiv.org/abs/2307.07764">
-<img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
-</a>
+    <a href="https://arxiv.org/abs/2307.07764">
+        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="300">
+    </a>
+
+    <a href="https://arxiv.org/abs/2307.07764">
+        <img src="cpath.png" width="400">
+    </a>
 </p>
 
 
 ## Installation
 The {cpath} R-package can be installed using {devtools}.
 
-```{r}
+```r
 install.packages("devtools")
 library(devtools)
 
@@ -28,7 +32,7 @@ library(ranger)
 
 ## Usage
 
-```{r}
+```r
 library(ranger)
 library(cpath)
 
