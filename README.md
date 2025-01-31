@@ -1,16 +1,23 @@
 # cpath
 
-## Explaining black-box models through counterfactual paths and conditional permutations
+## Explaining and visualizing black-box models through counterfactual paths
+
+https://arxiv.org/abs/2307.07764
 
 <p align="center">
-<img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="400">
+    <a href="https://arxiv.org/abs/2307.07764">
+        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="319">
+    </a>
+    <a href="https://arxiv.org/abs/2307.07764">
+        <img src="cpath.png" width="400">
+    </a>
 </p>
 
 
 ## Installation
-The cpath R-package can be installed using devtools.
+The {cpath} R-package can be installed using {devtools}.
 
-```{r}
+```r
 install.packages("devtools")
 library(devtools)
 
@@ -24,7 +31,7 @@ library(ranger)
 
 ## Usage
 
-```{r}
+```r
 library(ranger)
 library(cpath)
 
@@ -82,16 +89,16 @@ print(cp_q$importance)
 
 ```
 
-## CITATION
-If you find cpath useful please cite 
+## Citation
+
+If you find {cpath} useful please cite [our paper](https://arxiv.org/abs/2307.07764):
 
 ```
-@misc{pfeifer2023explainable,
-      title={Explainable AI with counterfactual paths}, 
-      author={Bastian Pfeifer and Mateusz Krzyzinski and Hubert Baniecki and Anna Saranti and Andreas Holzinger and Przemyslaw Biecek},
-      year={2023},
-      eprint={2307.07764},
-      archivePrefix={arXiv},
-      primaryClass={cs.AI}
+@article{pfeifer2023explaining,
+    title   = {Explaining and visualizing black-box models through counterfactual paths}, 
+    author  = {Bastian Pfeifer and Mateusz Krzyzinski and Hubert Baniecki and
+               Anna Saranti and Andreas Holzinger and Przemyslaw Biecek},
+    year    = {2023},
+    journal = {arXiv preprint, arXiv:2307.07764}
 }
 ```
