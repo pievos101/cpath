@@ -13,11 +13,9 @@ permute_column_nearest <- function(data, column_index, pred) {
   res = apply(Dist, 1, function(x){
       names(x) = NN
       x_sorted = sort(x, decreasing=FALSE)
-      print(x_sorted)
       id = which(names(x_sorted)[1] != names(x_sorted))[1]
       return(id)   
   })
-  print(res)
   data[,column_index] = data[res, column_index]
   data
 }

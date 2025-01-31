@@ -2,6 +2,7 @@
 library(ranger)
 library(lime)
 library(cpath)
+library(shapr)
 
 n.sim=50
 COR_cpath     = rep(NaN, n.sim)
@@ -55,7 +56,7 @@ print(ModelMetrics::auc(pred, target))
 
 ## CPATH
 # Get the counterfactual paths
-P   = cpath::cpaths(model, data, k=4, n_paths= 1000)
+P   = cpath::cpaths(model, data, k=4, n_paths= 1000, nearest=TRUE)
 
 # Build transition matrix 
 T   = cpath::transition(P)

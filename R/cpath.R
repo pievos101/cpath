@@ -22,7 +22,7 @@ cpath <- function(model, test_set, k, graph=NaN, nearest=FALSE){
       cf_path[xx] <- SAMPLE[xx] #sample(1:p, 1)
       
       if(nearest){
-        test_setX <- permute_column_nearest(test_setX, cf_path[xx])
+        test_setX <- permute_column_nearest(test_setX, cf_path[xx], labels)
       }else{
         test_setX <- permute_column(test_setX, cf_path[xx])
       }
