@@ -56,7 +56,7 @@ print(ModelMetrics::auc(pred, target))
 
 ## CPATH
 # Get the counterfactual paths
-P   = cpath::cpaths(model, data, k=4, n_paths= 1000, nearest=TRUE)
+P   = cpath::cpaths(model, data, k=4, n_paths= 1000)
 
 # Build transition matrix 
 T   = cpath::transition(P)
