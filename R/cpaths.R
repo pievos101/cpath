@@ -1,5 +1,5 @@
 #'@export
-cpaths <- function(model, data, k=4, n_paths=1000, graph=NaN){
+cpaths <- function(model, data, k=4, n_paths=1000, graph=NaN, nearest=FALSE){
 
   paths <- matrix(NaN, nrow=n_paths, ncol=k)
   swapped_fractions <- matrix(NaN, nrow=n_paths, ncol=k)
@@ -8,7 +8,7 @@ cpaths <- function(model, data, k=4, n_paths=1000, graph=NaN){
   lengths <- rep(NaN, n_paths)
 
   for (xx in 1:n_paths){
-    cpath <- cpath(model, data, k=k, graph)
+    cpath <- cpath(model, data, k=k, graph, nearest)
     paths[xx, ] <- cpath$cf_path[1:k]
     swapped_fractions[xx, ] <- cpath$swapped_fraction
     reswapped_fraction[xx, ] <- cpath$reswapped_fraction
@@ -24,7 +24,8 @@ cpaths <- function(model, data, k=4, n_paths=1000, graph=NaN){
 }
 
 #'@export
-cpaths_mc <- function(model, data, k=4, n_paths=1000, graph=NaN, ncores=NaN){
+cpaths_mc <- function(model, data, k=4, n_paths=1000, graph=NaN, 
+                                            ncores=NaN, nearest=FALSE){
   
   require(doParallel)
   require(foreach)
@@ -40,7 +41,7 @@ cpaths_mc <- function(model, data, k=4, n_paths=1000, graph=NaN, ncores=NaN){
   res <- foreach(i = 1:n_paths, .packages = c("ranger", "igraph", 
         "cpath")) %dopar% {
       #res <- cpaths(model, data, k=k, n_paths=1, graph)
-      arun = cpath(model, data, k=k, graph)
+      arun = cpath(model, data, k=k, graph, nearest)
       arun
   }
 

@@ -31,7 +31,7 @@ library(cpath)
 # Generate simulated data
 res  = sim()
 data = res$data
-target = res$target
+target = as.factor(res$target)
 
 # Train-test split 
 

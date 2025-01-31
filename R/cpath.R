@@ -1,6 +1,6 @@
 # main
 #'@export
-cpath <- function(model, test_set, k, graph=NaN){
+cpath <- function(model, test_set, k, graph=NaN, nearest=FALSE){
   labels <- get_predictions(model, test_set)
   
   n <- nrow(test_set)
@@ -20,7 +20,13 @@ cpath <- function(model, test_set, k, graph=NaN){
   for (xx in 1:k){
       
       cf_path[xx] <- SAMPLE[xx] #sample(1:p, 1)
-      test_setX <- permute_column(test_setX, cf_path[xx])
+      
+      if(nearest){
+        test_setX <- permute_column_nearest(test_setX, cf_path[xx])
+      }else{
+        test_setX <- permute_column(test_setX, cf_path[xx])
+      }
+
       labels_perm <- get_predictions(model, test_setX)
       swapped_observations[xx,] <- (labels!=labels_perm)
       fraction <- mean(swapped_observations[xx,])
