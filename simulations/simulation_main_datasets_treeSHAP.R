@@ -9,6 +9,7 @@ library(cpath)
 library(mlbench)
 library(shapr)
 library(treeshap)
+library(fastshap)
 
 n.sim=30
 COR_cpath     = rep(NaN, n.sim)
@@ -21,27 +22,33 @@ COR_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
-# Iris
-data(iris)
+# PimaIndiansDiabetes
+data(PimaIndiansDiabetes)
 
-na.ids = which(apply(iris,1,function(x){any(is.na(x))}))
-#iris = iris[-na.ids,]
-data   = iris[1:100,1:4]
+na.ids = which(apply(PimaIndiansDiabetes,1,function(x){any(is.na(x))}))
+#Ionosphere = Ionosphere[-na.ids,]
+data   = PimaIndiansDiabetes[,1:8]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = iris[1:100,5]
-target = factor(target, levels=c("setosa", "versicolor"))
+target = PimaIndiansDiabetes[,9]
+target = factor(target)
 
+
+
+
+## ----- ##
 colnames(data) = paste("V",1:ncol(data),sep="")
 NN = colnames(data)
 
 data2 = cbind(data, as.numeric(target))
 colnames(data2) = c(colnames(data),"target")
 target = as.numeric(target)
+
+
 
 # SIM
 for(ii in 1:n.sim){
@@ -54,12 +61,12 @@ while(TRUE){
     model = ranger(target~., data=as.data.frame(data),
                 num.trees=100, 
                 classification=TRUE, 
-                probability=TRUE, 
+                #probability=TRUE, 
                 #mtry=4, 
                 #replace=TRUE,#), 
                 importance='impurity')
     pred = predict(model, data)$predictions
-    pred = apply(pred,1,function(x){which.max(x)-1})
+    #pred = apply(pred,1,function(x){which.max(x)-1})
     #pred = t(pred)
     #print("?")
     if(all(pred==0)|all(pred==1)){
@@ -78,8 +85,8 @@ while(TRUE){
 
 print("Model Accuracy")
 print(ModelMetrics::auc(as.factor(pred), as.factor(target)))
-pred = pred
-target = as.factor(target)
+#pred = pred
+#target = as.factor(target)
 
 
 # Importances #########################
@@ -87,8 +94,13 @@ target = as.factor(target)
 
 
 # GET TREESHAP importance
-model_unified = ranger.unify(model, data)
+#print(is(model))
+model_unified = unify(model, data)
+#print(is(model_unified))
 vimp = treeshap(model_unified, data)
+#rm(model_unified)
+#gc()
+#print("done")
 vimp = vimp[[1]]
 vimp = colMeans(abs(vimp))
 
@@ -121,7 +133,15 @@ IMP2 = cpath::importance(T)
 #print("CPATH values")
 #print(IMP)
 
+## FAST SHAP
+rfo = model
+pfun = function(object, newdata){
+    predict(object, data=newdata)$predictions
+}
+ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
+        pred_wrapper=pfun, adjust=TRUE, nsim=1000)
 
+IMP_shap = colMeans(abs(ex.t1))
 
 ## SHAP
 #library(shapr)
@@ -170,7 +190,7 @@ IMP_lime = feat_imp
 #print(vimp[ids])
 
 #print("Correlation SHAP")
-#cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
+cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
 #print(cor_shap)
 #print("Correlation LIME")
 cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
@@ -188,13 +208,13 @@ cor_cpath_min = cor(vimp[ids], IMP2[ids], method="spearman")
 COR_cpath[ii] = cor_cpath
 COR_cpath_min[ii] = cor_cpath_min
 
-#COR_shap[ii] = cor_shap
+COR_shap[ii] = cor_shap
 COR_lime[ii] = cor_lime
 #COR_cpath_Q[ii]  = cor_cpath_Q
 #COR_cpath_RL[ii]  = cor_cpath_RL
 
-RES = cbind(COR_lime, COR_cpath, COR_cpath_min)
-colnames(RES) = c("LIME", "CPATH", "CPATH_min")
+RES = cbind(COR_shap, COR_lime, COR_cpath, COR_cpath_min)
+colnames(RES) = c("SHAP_fast","LIME", "CPATH", "CPATH_min")
 print(RES)
 
 } # End of simulation

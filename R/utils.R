@@ -22,7 +22,11 @@ permute_column_nearest <- function(data, column_index, pred) {
 
 get_predictions <- function(model, data_matrix) {
   pred <- predict(model, data_matrix)$predictions
-  apply(pred, 1, function(x){which.max(x)-1})
+  if(is.matrix(pred)){
+    apply(pred, 1, function(x){which.max(x)-1})
+  }else{
+    pred
+  }
 }
 
 # k for possibility of reducing rewards for longer paths
