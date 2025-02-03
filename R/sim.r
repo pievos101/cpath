@@ -2,9 +2,9 @@
 
 # [conditional dependent] - cPATH wins
 #'@export
-sim <- function(){
+sim <- function(feats=4){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(feats*100, 0, 2), 100, feats)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
@@ -56,9 +56,9 @@ return(list(data=data, target=target))
 
 # [correllated] - 
 #'@export
-sim3 <- function(){
+sim3 <- function(feats=4){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(feats*100, 0, 2), 100, feats)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 #target = numeric(dim(data)[1]) #sample(c(0,1),dim(data)[1], replace=TRUE)
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
@@ -88,9 +88,9 @@ return(list(data=data, target=target, noise=1-(count/length(target))))
 
 # [Features are independent] - LIME wins - cpath looses
 #'@export
-sim4 <- function(){
+sim4 <- function(feats=4){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(feats*100, 0, 2), 100, feats)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
@@ -122,9 +122,9 @@ return(list(data=data, target=target, 1-(count/length(target))))
 
 #[conditional dependent] - CPATH wins
 #'@export
-sim5 <- function(){
+sim5 <- function(feats=4){
 
-data = matrix(rnorm(400, 0, 2), 100, 4)
+data = matrix(rnorm(feats*100, 0, 2), 100, feats)
 colnames(data) <- paste("V", 1:dim(data)[2], sep="")
 target = sample(c(0,1),dim(data)[1], replace=TRUE)
 
