@@ -22,26 +22,27 @@ COR_cpath_RL  = rep(NaN, n.sim)
 ### DATASET
 
 
-# PimaIndiansDiabetes
-data(PimaIndiansDiabetes)
+# Iris
+data(iris)
 
-na.ids = which(apply(PimaIndiansDiabetes,1,function(x){any(is.na(x))}))
-#Ionosphere = Ionosphere[-na.ids,]
-data   = PimaIndiansDiabetes[,1:8]
+na.ids = which(apply(iris,1,function(x){any(is.na(x))}))
+#iris = iris[-na.ids,]
+data   = iris[1:100,1:4]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = PimaIndiansDiabetes[,9]
-target = factor(target)
+target = iris[1:100,5]
+target = factor(target, levels=c("setosa", "versicolor"))
 
 
 CPATH = FALSE
 CPATH_min = FALSE
 LIME = FALSE
-SHAP = TRUE
+SHAP = FALSE
+fastSHAP = TRUE
 
 # SIM
 for(ii in 1:n.sim){
@@ -85,18 +86,21 @@ print(ModelMetrics::auc(pred, target))
 vimp = model$variable.importance
 ids = vimp!=0
 
-
+if(fastSHAP){
 ## FAST SHAP
-#rfo = model
-#pfun = function(object, newdata){
-#    pred = predict(object, data=newdata)$predictions
-#    apply(pred,1,function(x){which.max(x)-1})
-#}
+rfo = model
+pfun = function(object, newdata){
+    pred = predict(object, data=newdata)$predictions
+    apply(pred,1,function(x){which.max(x)-1})
+}
 
-#ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
-#        pred_wrapper=pfun, adjust=TRUE, nsim=1000)
+ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
+        pred_wrapper=pfun, adjust=TRUE, nsim=1000, parallel=TRUE)
 #
-#IMP_shap = colMeans(abs(ex.t1))
+IMP_shap = colMeans(abs(ex.t1))
+cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
+COR_shap[ii] = cor_shap
+}
 
 if(CPATH){
 ## CPATH
