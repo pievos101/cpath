@@ -22,21 +22,20 @@ COR_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
-# Ionosphere 
-data(Ionosphere)
+# Breast Cancer
+data(BreastCancer)
 
-na.ids = which(apply(Ionosphere,1,function(x){any(is.na(x))}))
-#Ionosphere = Ionosphere[-na.ids,]
-data   = Ionosphere[,3:10]
+na.ids = which(apply(BreastCancer,1,function(x){any(is.na(x))}))
+BreastCancer = BreastCancer[-na.ids,]
+data   = BreastCancer[,2:10]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = Ionosphere[,35]
+target = BreastCancer[,11]
 target = factor(target)#, levels=c("setosa", "versicolor"))
-
 
 
 
@@ -93,7 +92,7 @@ print(ModelMetrics::auc(as.factor(pred), as.factor(target)))
 #######################################
 
 
-# GET TREESHAP importance
+# GET TREESHAP importance as GROUND TRUTH
 #print(is(model))
 model_unified = unify(model, data)
 #print(is(model_unified))

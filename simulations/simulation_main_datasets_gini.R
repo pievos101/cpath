@@ -38,6 +38,11 @@ target = PimaIndiansDiabetes[,9]
 target = factor(target)
 
 
+CPATH = FALSE
+CPATH_min = FALSE
+LIME = FALSE
+SHAP = TRUE
+
 # SIM
 for(ii in 1:n.sim){
 
@@ -76,21 +81,24 @@ print(ModelMetrics::auc(pred, target))
 # Importances #########################
 #######################################
 
+# GINI importance (GROUND TRUTH)
+vimp = model$variable.importance
+ids = vimp!=0
+
 
 ## FAST SHAP
-rfo = model
-pfun = function(object, newdata){
-    pred = predict(object, data=newdata)$predictions
-    apply(pred,1,function(x){which.max(x)-1})
-}
+#rfo = model
+#pfun = function(object, newdata){
+#    pred = predict(object, data=newdata)$predictions
+#    apply(pred,1,function(x){which.max(x)-1})
+#}
 
-ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
-        pred_wrapper=pfun, adjust=TRUE, nsim=1000)
+#ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
+#        pred_wrapper=pfun, adjust=TRUE, nsim=1000)
+#
+#IMP_shap = colMeans(abs(ex.t1))
 
-IMP_shap = colMeans(abs(ex.t1))
-
-
-
+if(CPATH){
 ## CPATH
 # Get the counterfactual paths
 P   = cpath::cpaths_mc(model, data, k=4, n_paths= 1000)
@@ -102,8 +110,11 @@ T   = cpath::transition(P)
 IMP = cpath::importance(T)
 #print("CPATH values")
 #print(IMP)
+cor_cpath = cor(vimp[ids], IMP[ids], method="spearman")
+COR_cpath[ii] = cor_cpath
+}
 
-
+if(CPATH_min){
 ## CPATH_min
 # Get the counterfactual paths
 P   = cpath::cpaths_mc(model, data, k=4, n_paths= 1000, nearest=TRUE)
@@ -115,27 +126,33 @@ T   = cpath::transition(P)
 IMP2 = cpath::importance(T)
 #print("CPATH values")
 #print(IMP)
+cor_cpath_min = cor(vimp[ids], IMP2[ids], method="spearman")
+COR_cpath_min[ii] = cor_cpath_min
+}
 
-
-
+if(SHAP){
 ## SHAP
-#library(shapr)
-#data = as.data.frame(data)
-#explainer <- shapr(data, model)
+library(shapr)
+data = as.data.frame(data)
+explainer  <- shapr(as.data.frame(data), model, n_combinations = 1000)
 
-#explanation <- shapr::explain(
-#  data,
-#  approach = "empirical",
-#  explainer = explainer,
-#  prediction_zero = mean(target)
-#)
+explanation <- shapr::explain(
+  as.data.frame(data),
+  approach = "empirical",
+  explainer = explainer,
+  prediction_zero = mean(as.numeric(target)-1)
+)
 
-#IMP_shap = apply(abs(explanation$dt),2,sum)[-1]
+IMP_shap = apply(abs(explanation$dt),2,sum)[-1]
 #print("SHAP values")
 #print(IMP_shap)
+cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
+COR_shap[ii] = cor_shap
+}
 
 rm(.Random.seed, envir=globalenv())
 
+if(LIME){
 # LIME (n_labels??)
 explainer <- lime(as.data.frame(data), model, bin_continuous = TRUE, quantile_bins = FALSE)
 explanation <- lime::explain(data, explainer, n_labels = 2, n_features = dim(data)[2])
@@ -145,7 +162,9 @@ feat_imp = apply(feat_weights,2, sum)
 IMP_lime = feat_imp
 #print("LIME values")
 #print(IMP_lime)
-
+cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
+COR_lime[ii] = cor_lime
+}
 
 # CPATH Q ###########################
 #cp_q <- cpath_qlearning(model, data, k=4)
@@ -160,35 +179,12 @@ IMP_lime = feat_imp
 #print(cp_q_imp)
 
 
-# GINI importance
-vimp = model$variable.importance
-ids = vimp!=0
-
-
-#print("GINI importance")
-#print(vimp[ids])
-
-#print("Correlation SHAP")
-cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
-#print(cor_shap)
-#print("Correlation LIME")
-cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
-#print(cor_lime)
-#print("Correlation cpath")
-cor_cpath = cor(vimp[ids], IMP[ids], method="spearman")
-#print(cor_cpath)
 #print("Correlation cpath RL")
 #cor_cpath_Q = cor(vimp[ids], cp_q_imp[ids], method="spearman")
 #print(cor_cpath_RL)
 #cor_cpath_RL = cor(vimp[ids], cp_rl_imp[ids], method="spearman")
 #print(cor_cpath_RL)
-cor_cpath_min = cor(vimp[ids], IMP2[ids], method="spearman")
 
-COR_cpath[ii] = cor_cpath
-COR_cpath_min[ii] = cor_cpath_min
-
-COR_shap[ii] = cor_shap
-COR_lime[ii] = cor_lime
 #COR_cpath_Q[ii]  = cor_cpath_Q
 #COR_cpath_RL[ii]  = cor_cpath_RL
 
