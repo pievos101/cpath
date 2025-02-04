@@ -22,22 +22,20 @@ AUC_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
+# PimaIndiansDiabetes
+data(PimaIndiansDiabetes)
 
-
-# Ionosphere 
-data(Ionosphere)
-
-na.ids = which(apply(Ionosphere,1,function(x){any(is.na(x))}))
+na.ids = which(apply(PimaIndiansDiabetes,1,function(x){any(is.na(x))}))
 #Ionosphere = Ionosphere[-na.ids,]
-data   = Ionosphere[,3:10]
+data   = PimaIndiansDiabetes[,1:8]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = Ionosphere[,35]
-target = factor(target)#, levels=c("setosa", "versicolor"))
+target = PimaIndiansDiabetes[,9]
+target = factor(target)
 
 
 CPATH = TRUE
