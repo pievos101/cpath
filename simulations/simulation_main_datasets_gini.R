@@ -8,6 +8,7 @@ library(lime)
 library(cpath)
 library(mlbench)
 library(shapr)
+library(fastshap)
 
 n.sim=30
 COR_cpath     = rep(NaN, n.sim)
@@ -20,20 +21,21 @@ COR_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
-# Ionosphere 
-data(Ionosphere)
 
-na.ids = which(apply(Ionosphere,1,function(x){any(is.na(x))}))
+# PimaIndiansDiabetes
+data(PimaIndiansDiabetes)
+
+na.ids = which(apply(PimaIndiansDiabetes,1,function(x){any(is.na(x))}))
 #Ionosphere = Ionosphere[-na.ids,]
-data   = Ionosphere[,3:10]
+data   = PimaIndiansDiabetes[,1:8]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = Ionosphere[,35]
-target = factor(target)#, levels=c("setosa", "versicolor"))
+target = PimaIndiansDiabetes[,9]
+target = factor(target)
 
 
 # SIM
@@ -73,6 +75,21 @@ print(ModelMetrics::auc(pred, target))
 
 # Importances #########################
 #######################################
+
+
+## FAST SHAP
+rfo = model
+pfun = function(object, newdata){
+    pred = predict(object, data=newdata)$predictions
+    apply(pred,1,function(x){which.max(x)-1})
+}
+
+ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
+        pred_wrapper=pfun, adjust=TRUE, nsim=1000)
+
+IMP_shap = colMeans(abs(ex.t1))
+
+
 
 ## CPATH
 # Get the counterfactual paths
@@ -152,7 +169,7 @@ ids = vimp!=0
 #print(vimp[ids])
 
 #print("Correlation SHAP")
-#cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
+cor_shap = cor(vimp[ids], IMP_shap[ids], method="spearman")
 #print(cor_shap)
 #print("Correlation LIME")
 cor_lime = cor(vimp[ids], IMP_lime[ids], method="spearman")
@@ -170,13 +187,13 @@ cor_cpath_min = cor(vimp[ids], IMP2[ids], method="spearman")
 COR_cpath[ii] = cor_cpath
 COR_cpath_min[ii] = cor_cpath_min
 
-#COR_shap[ii] = cor_shap
+COR_shap[ii] = cor_shap
 COR_lime[ii] = cor_lime
 #COR_cpath_Q[ii]  = cor_cpath_Q
 #COR_cpath_RL[ii]  = cor_cpath_RL
 
-RES = cbind(COR_lime, COR_cpath, COR_cpath_min)
-colnames(RES) = c("LIME", "CPATH", "CPATH_min")
+RES = cbind(COR_shap, COR_lime, COR_cpath, COR_cpath_min)
+colnames(RES) = c("SHAP_fast", "LIME", "CPATH", "CPATH_min")
 print(RES)
 
 } # End of simulation
