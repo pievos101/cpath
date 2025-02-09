@@ -21,7 +21,6 @@ COR_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
-
 # Iris
 data(iris)
 
@@ -37,12 +36,11 @@ data = as.data.frame(data)
 target = iris[1:100,5]
 target = factor(target, levels=c("setosa", "versicolor"))
 
-
-CPATH = FALSE
+CPATH = TRUE
 CPATH_min = FALSE
 LIME = FALSE
 SHAP = FALSE
-fastSHAP = TRUE
+fastSHAP = FALSE
 
 # SIM
 for(ii in 1:n.sim){
@@ -105,7 +103,7 @@ COR_shap[ii] = cor_shap
 if(CPATH){
 ## CPATH
 # Get the counterfactual paths
-P   = cpath::cpaths_mc(model, data, k=4, n_paths= 1000)
+P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 10000)
 
 # Build transition matrix 
 T   = cpath::transition(P)
@@ -121,7 +119,7 @@ COR_cpath[ii] = cor_cpath
 if(CPATH_min){
 ## CPATH_min
 # Get the counterfactual paths
-P   = cpath::cpaths_mc(model, data, k=4, n_paths= 1000, nearest=TRUE)
+P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 10000, nearest=TRUE)
 
 # Build transition matrix 
 T   = cpath::transition(P)

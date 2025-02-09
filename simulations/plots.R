@@ -81,6 +81,13 @@ L[[2]] = cbind(read.table("SHAP_DIABETES_corr_with_gini.txt")[,1],L[[2]])
 L[[3]] = cbind(read.table("SHAP_IONOSPHERE_corr_with_gini.txt")[,1],L[[3]])
 L[[4]] = cbind(read.table("SHAP_IRIS_corr_with_gini.txt")[,1],L[[4]])
 
+# CPATH with k=ncol(data)
+L[[1]][,3] = read.table("BREAST_corr_with_gini_CPATH_full.txt")[,3]
+L[[2]][,3] = read.table("DIABETES_corr_with_gini_CPATH_full.txt")[,3]
+L[[3]][,3] = read.table("IONOSPHERE_corr_with_gini_CPATH_full.txt")[,3]
+L[[4]][,3] = read.table("IRIS_corr_with_gini_CPATH_full.txt")[,3]
+
+
 colnames(L[[1]]) = NN
 colnames(L[[2]]) = NN
 colnames(L[[3]]) = NN
@@ -115,6 +122,13 @@ L[[1]] = read.table("SIM_BREAST_corr_with_treeSHAP.txt")
 L[[2]] = read.table("SIM_DIABETES_corr_with_treeSHAP.txt")
 L[[3]] = read.table("SIM_IONOSPHERE_corr_with_treeSHAP.txt")
 L[[4]] = read.table("SIM_IRIS_corr_with_treeSHAP.txt")
+
+
+# CPATH with k=ncol(data)
+L[[1]][,3] = read.table("BREAST_corr_with_treeSHAP_CPATH_full.txt")[,3]
+L[[2]][,3] = read.table("DIABETES_corr_with_treeSHAP_CPATH_full.txt")[,3]
+L[[3]][,3] = read.table("IONOSPHERE_corr_with_treeSHAP_CPATH_full.txt")[,3]
+L[[4]][,3] = read.table("IRIS_corr_with_treeSHAP_CPATH_full.txt")[,3]
 
 
 colnames(L[[1]]) = NN
