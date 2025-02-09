@@ -12,6 +12,10 @@ L[[1]] = read.table("BREAST_auc.txt")
 L[[2]] = read.table("DIABETES_auc.txt")
 L[[3]] = read.table("IONOSPHERE_auc.txt")
 
+L[[2]][,3] = read.table("DIABETES_CPATH_full_auc.txt")[,3]
+L[[3]][,3] = read.table("IONOSPHERE_CPATH_full_auc.txt")[,3]
+
+
 colnames(L[[1]]) = NN
 colnames(L[[2]]) = NN
 colnames(L[[3]]) = NN

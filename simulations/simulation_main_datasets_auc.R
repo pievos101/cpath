@@ -22,27 +22,27 @@ AUC_cpath_RL  = rep(NaN, n.sim)
 
 ### DATASET
 
-# Iris
-data(iris)
+# Ionosphere 
+data(Ionosphere)
 
-na.ids = which(apply(iris,1,function(x){any(is.na(x))}))
-#iris = iris[-na.ids,]
-data   = iris[1:100,1:4]
+na.ids = which(apply(Ionosphere,1,function(x){any(is.na(x))}))
+#Ionosphere = Ionosphere[-na.ids,]
+data   = Ionosphere[,3:10]
 NN = colnames(data)
 data = matrix(as.numeric(unlist(data)), dim(data)[1], dim(data)[2])
 #data = apply(data,2,function(x){ (x - mean(x)) / sd(x)})
 colnames(data) = NN
 data = as.data.frame(data)
 
-target = iris[1:100,5]
-target = factor(target, levels=c("setosa", "versicolor"))
+target = Ionosphere[,35]
+target = factor(target)#, levels=c("setosa", "versicolor"))
 
 
 CPATH = TRUE
-CPATH_min = TRUE
-LIME = TRUE
+CPATH_min = FALSE
+LIME = FALSE
 SHAP = FALSE
-fastSHAP = TRUE
+fastSHAP = FALSE
 
 # SIM
 for(ii in 1:n.sim){
@@ -103,7 +103,7 @@ ids = vimp!=0
 if(CPATH){
 ## CPATH
 # Get the counterfactual paths
-P   = cpath::cpaths_mc(model, data, k=4, n_paths= 1000)
+P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 10000)
 
 # Build transition matrix 
 T   = cpath::transition(P)
