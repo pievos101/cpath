@@ -3,6 +3,7 @@ library(ranger)
 library(lime)
 library(cpath)
 library(shapr)
+library(fastshap)
 
 n.sim=50
 feats = c(10, 50, 100, 1000)
@@ -57,22 +58,18 @@ print("Model Accuracy")
 print(ModelMetrics::auc(pred, target))
 
 speed = system.time({
-## CPATH_min 
-# Get the counterfactual paths
-P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 1000, nearest=FALSE)
-if(sum(P$counterfactuality)<=2){
-    RES_speed[ii,xx] = speed[3]
-    RES[ii,xx] = 0
-    print(RES)
-    print(RES_speed)
-    next
+## FAST SHAP
+rfo = model
+pfun = function(object, newdata){
+    pred = predict(object, data=newdata)$predictions
+    apply(pred,1,function(x){which.max(x)-1})
 }
 
-# Build transition matrix 
-T   = cpath::transition(P)
+ex.t1 = fastshap::explain(rfo, X=as.matrix(data), 
+        pred_wrapper=pfun, adjust=TRUE, nsim=10, parallel=TRUE)
+#
+IMP2 = colMeans(abs(ex.t1))
 
-# Get global feature importances
-IMP2 = cpath::importance(T)
 })
 
 #print(speed)
