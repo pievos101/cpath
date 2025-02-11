@@ -152,3 +152,117 @@ p = ggplot(L_melt, aes(x=variable, y=value)) +
   xlab("") +
   theme(text = element_text(size=15)) +
   facet_wrap(~L1,ncol=2) 
+
+
+##### Computational Speed and Coverage 
+#COV
+setwd("~/GitHub/cpath/SIM_SPEED/")
+
+COV = list()
+cov_10 = colMeans(read.table("COV_10paths.txt"))
+cov_100 = colMeans(read.table("COV_100paths.txt"))
+cov_1000 = colMeans(read.table("COV_1000paths.txt"))
+cov_10000 = colMeans(read.table("COV_10000paths.txt"))
+
+COV[[1]] = cov_10
+COV[[2]] = cov_100
+COV[[3]] = cov_1000
+COV[[4]] = cov_10000
+
+names(COV) = c("10","100","1000","10000")
+
+COV_full = list()
+cov_10_full = colMeans(read.table("COV_10paths_full.txt"))
+cov_100_full = colMeans(read.table("COV_100paths_full.txt"))
+cov_1000_full = colMeans(read.table("COV_1000paths_full.txt"))
+cov_10000_full = colMeans(read.table("COV_10000paths_full.txt"))
+
+COV_full[[1]] = cov_10_full
+COV_full[[2]] = cov_100_full
+COV_full[[3]] = cov_1000_full
+COV_full[[4]] = cov_10000_full
+
+names(COV_full) = c("10","100","1000","10000")
+
+library(ggplot2)
+library(reshape)
+COV_melt = melt(COV)
+COV_full_melt = melt(COV_full)
+
+COV_melt = cbind("cpath (k=4)",COV_melt)
+colnames(COV_melt) = c("Strategy","Coverage","nPaths")
+COV_full_melt = cbind("cpath (k=nfeat)",COV_full_melt)
+colnames(COV_full_melt) = c("Strategy","Coverage","nPaths")
+
+COV_all = rbind(COV_melt, COV_full_melt)
+nfeatures = rep(c(10,50,100,1000),4*2)
+COV_all = cbind(COV_all, nfeatures) 
+COV_all$Coverage = as.numeric(COV_all$Coverage)
+COV_all$nfeatures = as.numeric(COV_all$nfeatures)
+
+# Plot
+p1 = ggplot(data=COV_all, aes(x=nfeatures, y=Coverage, group=nPaths)) +
+  geom_line(aes(color=nPaths), linewidth=1)+
+  geom_point(aes(color=nPaths), size=2)+
+  scale_x_continuous(breaks = c(10,50,100,1000))+
+  theme(text = element_text(size=12)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  facet_wrap(~Strategy, ncol=2) 
+
+
+
+##### Computational Speed and Coverage 
+#TIME
+setwd("~/GitHub/cpath/SIM_SPEED/")
+
+COV = list()
+cov_10 = colMeans(read.table("TIME_10paths.txt"))
+cov_100 = colMeans(read.table("TIME_100paths.txt"))
+cov_1000 = colMeans(read.table("TIME_1000paths.txt"))
+cov_10000 = colMeans(read.table("TIME_10000paths.txt"))
+
+COV[[1]] = cov_10
+COV[[2]] = cov_100
+COV[[3]] = cov_1000
+COV[[4]] = cov_10000
+
+names(COV) = c("10","100","1000","10000")
+
+COV_full = list()
+cov_10_full = colMeans(read.table("TIME_10paths_full.txt"))
+cov_100_full = colMeans(read.table("TIME_100paths_full.txt"))
+cov_1000_full = colMeans(read.table("TIME_1000paths_full.txt"))
+cov_10000_full = colMeans(read.table("TIME_10000paths_full.txt"))
+
+COV_full[[1]] = cov_10_full
+COV_full[[2]] = cov_100_full
+COV_full[[3]] = cov_1000_full
+COV_full[[4]] = cov_10000_full
+
+names(COV_full) = c("10","100","1000","10000")
+
+library(ggplot2)
+library(reshape)
+COV_melt = melt(COV)
+COV_full_melt = melt(COV_full)
+
+COV_melt = cbind("cpath (k=4)",COV_melt)
+colnames(COV_melt) = c("Strategy","Time","nPaths")
+COV_full_melt = cbind("cpath (k=nfeat)",COV_full_melt)
+colnames(COV_full_melt) = c("Strategy","Time","nPaths")
+
+COV_all = rbind(COV_melt, COV_full_melt)
+nfeatures = rep(c(10,50,100,1000),4*2)
+COV_all = cbind(COV_all, nfeatures) 
+COV_all$Coverage = as.numeric(COV_all$Time)
+COV_all$nfeatures = as.numeric(COV_all$nfeatures)
+
+# Plot
+p1 = ggplot(data=COV_all, aes(x=nfeatures, y=Time, group=nPaths)) +
+  geom_line(aes(color=nPaths), linewidth=1)+
+  geom_point(aes(color=nPaths), size=2)+
+  scale_x_continuous(breaks = c(10,50,100,1000))+
+  theme(text = element_text(size=12)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+
+  facet_wrap(~Strategy, ncol=2) 
+

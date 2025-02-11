@@ -59,7 +59,7 @@ print(ModelMetrics::auc(pred, target))
 speed = system.time({
 ## CPATH_min 
 # Get the counterfactual paths
-P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 1000, nearest=FALSE)
+P   = cpath::cpaths_mc(model, data, k=ncol(data), n_paths= 10000, nearest=FALSE)
 if(sum(P$counterfactuality)<=2){
     RES_speed[ii,xx] = speed[3]
     RES[ii,xx] = 0
