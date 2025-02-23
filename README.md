@@ -2,9 +2,10 @@
 
 ## Explaining and visualizing black-box models through counterfactual paths
 
-Paper: https://arxiv.org/abs/2307.07764
+Paper: https://arxiv.org/abs/2307.07764.
+
 Software documentation:
-https://github.com/pievos101/cpath/blob/main/cpath_documentation.pdf
+https://github.com/pievos101/cpath/blob/main/cpath_documentation.pdf.
 
 <p align="center">
     <a href="https://arxiv.org/abs/2307.07764">
@@ -91,12 +92,6 @@ cpath_summary = get_cpath_summary(P)
 
 # Plot the paths
 plot_paths(cpath_summary)
-
-####################################
-# The RL Q-Learning solution
-####################################
-cp_q <- cpaths_rl(model, test, k=4)
-print(cp_q$importance)
 
 ```
 
