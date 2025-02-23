@@ -6,6 +6,16 @@ name_path <- function(path_row, k){
   paste(path_row[1:k][!is.na(path_row[1:k])], collapse = "-")
 }
 
+#' Visualization summary for the counterfactual paths
+#'
+#' 
+#' @param cpaths The object returned by the function cpaths().
+#' @param only_counterfactual TRUE when only counterfactuals should be considered
+#' @return aggregated results for efficient visualization
+#'
+#' @examples
+#' NaN
+#'
 #'@export
 get_cpath_summary <- function(cpaths, only_counterfactual=TRUE){
   if (only_counterfactual){
@@ -55,6 +65,19 @@ get_cpath_summary <- function(cpaths, only_counterfactual=TRUE){
   list("cpath_agg" = cpath_agg, "cpath_delta" = cpath_delta)
 }
 
+#' Visualization of the counterfactual paths
+#'
+#' 
+#' @param cpaths_summary The object returned by cpath_summary().
+#' @param n_paths Number of paths to be displayed
+#' @param min_length Minimum length of paths
+#' @param count_threshold Number of paths
+#' @param column_names Feature names
+#' @return NaN
+#'
+#' @examples
+#' NaN
+#'
 #'@export
 plot_paths <- function(cpath_summary, n_paths = 50, min_length = 2, 
                        count_threshold = 0, column_names=NULL){
