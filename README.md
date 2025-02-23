@@ -26,17 +26,16 @@ library(devtools)
 devtools::install_github("pievos101/cpath")
 library(cpath)
 
-# ranger package is required 
-install.packages("ranger")
-library(ranger)
 ```
 
 ## Usage
 
-```r
-library(ranger)
-library(cpath)
+Lets apply {cpath} on a random forest model. 
 
+```r
+library(caret)
+library(cpath)
+ 
 # Generate simulated data
 res  = sim()
 data = res$data
@@ -52,19 +51,29 @@ train_ind <- sample(seq_len(nrow(data)), size = smp_size)
 train <- data[train_ind, ]
 test  <- data[-train_ind, ]
 
-target_train = target[train_ind]
-target_test  = target[-train_ind]
+target_train = as.factor(target[train_ind])
+target_test  = as.factor(target[-train_ind])
 
-# Train a random forest classifier
-model = ranger(x=train,y=as.factor(target_train), 
-            num.trees=100, 
-            classification=TRUE, 
-            probability=TRUE, 
-            importance='impurity')
+TRAIN = as.data.frame(cbind(train, target_train))
+TRAIN$target_train = as.factor(TRAIN$target_train)
 
-# Predictions on test data
-pred = predict(model, test)$predictions
-pred = apply(pred,1,function(x){which.max(x)-1})
+#10 folds repeat 3 times
+control <- trainControl(method='repeatedcv', 
+                        number=10, 
+                        repeats=3)
+#Metric compare model is Accuracy
+metric <- "Accuracy"
+set.seed(123)
+#Number randomly variable selected is mtry
+mtry <- sqrt(ncol(train))
+tunegrid <- expand.grid(.mtry=mtry)
+model <- train(target_train~., 
+                      data=TRAIN, 
+                      method='rf', 
+                      metric='Accuracy', 
+                      tuneGrid=tunegrid, 
+                      trControl=control)
+print(model)
 
 # Get the counterfactual paths
 P   = cpath::cpaths(model, test, k=4, n_paths = 1000)

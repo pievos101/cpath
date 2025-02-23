@@ -21,7 +21,10 @@ permute_column_nearest <- function(data, column_index, pred) {
 }
 
 get_predictions <- function(model, data_matrix) {
-  pred <- predict(model, data_matrix)$predictions
+  pred <- predict(model, data_matrix)
+  if(is.list(pred)){
+    pred = pred$predictions
+  }
   if(is.matrix(pred)){
     apply(pred, 1, function(x){which.max(x)-1})
   }else{
