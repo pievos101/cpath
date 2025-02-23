@@ -6,10 +6,10 @@ https://arxiv.org/abs/2307.07764
 
 <p align="center">
     <a href="https://arxiv.org/abs/2307.07764">
-        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="319">
+        <img src="https://github.com/pievos101/cpath/blob/main/logo.png" width="300">
     </a>
     <a href="https://arxiv.org/abs/2307.07764">
-        <img src="cpath2.png" width="400">
+        <img src="cpath2.png" width="420">
     </a>
 </p>
 
