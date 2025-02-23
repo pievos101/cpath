@@ -1,5 +1,20 @@
-# main
+#' Counterfactual path generation
+#'
+#' 
+#' @param model The classifier to be explained 
+#' @param test_set The test set for which explanations should be generated.
+#' The samples as rows and the features as columns.
+#' @param k The maximum length of the perturbation path
+#' @param graph A graph structure of the features (igraph object). default=NaN
+#' @param nearest Computes minimal perturbation paths (CPATH_min). default=FALSE
+#' @return The counterfactual paths and the fraction of swapped classes.
+#'
+#' @examples
+#' NaN
+#'
 #'@export
+
+
 cpath <- function(model, test_set, k, graph=NaN, nearest=FALSE){
   labels <- get_predictions(model, test_set)
   

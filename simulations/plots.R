@@ -1,3 +1,90 @@
+## PLOT 
+library(ggplot2)
+library(reshape)
+
+
+signal = as.factor(c(2/2, 2/4, 2/6, 2/8, 2/10))
+
+#conditional dependency (1)
+gini  = c(0.990, 0.940, 0.875, 0.860, 0.815)
+cpath = c(0.960, 0.910, 0.830, 0.850, 0.715)
+shap  = c(0.855, 0.700, 0.635, 0.640, 0.615)
+lime  = c(0.720, 0.655, 0.595, 0.600, 0.600)
+cpi   = c(1,     0.955, 0.860, 0.505, 0.520)
+cpath_min = c(0.960, 0.850, 0.820, 0.900, 0.790)
+
+a = cbind(cpath, cpath_min)
+colnames(a) = c("CPATH","CPATH_min")
+rownames(a) = signal
+
+#conditional dependency (2)
+#
+gini  = c(0.990, 0.955, 0.820, 0.865, 0.795)
+cpath = c(0.955, 0.920, 0.830, 0.840, 0.795)
+shap  = c(0.855, 0.730, 0.625, 0.630, 0.625)
+lime  = c(0.725, 0.605, 0.500, 0.575, 0.585)
+cpi   = c(0.985, 0.980, 0.870, 0.380, 0.350)
+cpath_min = c(0.960, 0.890, 0.820, 0.720, 0.750)
+#
+
+b = cbind(cpath, cpath_min)
+colnames(b) = c("CPATH","CPATH_min")
+rownames(b) = signal
+
+
+# correlation
+gini = c(0.90,0.74,0.73,0.78,0.64)
+cpath = c(0.80,0.72,0.71,0.70,0.63)
+shap = c(0.86,0.71,0.75,0.72,0.57)
+lime = c(0.88,0.74,0.76,0.78,0.67)
+cpi = c(0.93,0.80,0.78,0.47,0.32)
+cpath_min = c(0.770, 0.690, 0.600, 0.650, 0.620)
+#
+
+
+c = cbind(cpath, cpath_min)
+colnames(c) = c("CPATH","CPATH_min")
+rownames(c) = signal
+
+# independency 
+gini = c(1,1,1,1,1)
+cpath = c(1,1,1,1,1)
+shap = c(1,1,1,1,1)
+lime = c(1,1,1,1,1)
+cpi = c(1,1,1,0.5,0.49)
+cpath_min = c(1,1, 0.97,0.98,0.99)
+
+
+d = cbind(cpath, cpath_min)
+colnames(d) = c("CPATH","CPATH_min")
+rownames(d) = signal
+
+
+RES = list(a,b,c,d)
+names(RES) = c("Conditional dependency (1)",
+"Conditional dependency (2)","Correlation","Conditional in-dependency")
+
+df_melt = melt(RES)
+
+
+colnames(df_melt) = c("signal","Method","value","type")
+df_melt$value  <- as.numeric(df_melt$value)
+df_melt$signal <- as.numeric(df_melt$signal)
+
+p <- ggplot(df_melt, aes(x=signal, y=value, group=Method)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  geom_line(aes(color=Method), size=1)+
+  geom_point(aes(color=Method), size=2)+
+  #scale_x_reverse()+
+  ylab("Coverage") +
+  xlab("Signal to noise ratio")+
+  #scale_x_continuous(name="signal to noise ratio", 
+  #labels=c("2/2", "2/4", "2/6", "2/8", "2/10")) +
+  scale_x_reverse(labels=rev(c("2/2", "2/4", "2/6", "2/8", "2/10")))+
+  theme_bw() + 
+  theme(text=element_text(size=15)) +
+  facet_wrap(~type, nrow = 2)
+p
 
 
 #### DATASETS AUC ####
