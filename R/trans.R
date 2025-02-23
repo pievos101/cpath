@@ -1,3 +1,12 @@
+#' Computes the feature transition matrix
+#'
+#' 
+#' @param cpaths The object returned by the function cpaths().
+#' @return The feature transition matrix
+#'
+#' @examples
+#' NaN
+#'
 #'@export
 transition <- function(cpaths){
   paths <- cpaths$paths[cpaths$counterfactuality,]

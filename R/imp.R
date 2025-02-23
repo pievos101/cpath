@@ -1,3 +1,12 @@
+#' Feature importances 
+#'
+#' 
+#' @param Tran Transition matrix returned by the function trans().
+#' @return Feature importance values
+#'
+#' @examples
+#' NaN
+#'
 #'@export
 importance <- function(Tran, agg_type = "matrix"){
 

@@ -1,4 +1,4 @@
-#' Counterfactual path generation
+#' Counterfactual single path generation
 #'
 #' 
 #' @param model The classifier to be explained 
