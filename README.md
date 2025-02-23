@@ -2,7 +2,9 @@
 
 ## Explaining and visualizing black-box models through counterfactual paths
 
-https://arxiv.org/abs/2307.07764
+Paper: https://arxiv.org/abs/2307.07764
+Software documentation:
+https://github.com/pievos101/cpath/blob/main/cpath_documentation.pdf
 
 <p align="center">
     <a href="https://arxiv.org/abs/2307.07764">
